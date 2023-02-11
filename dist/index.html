@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link href="../src/styles.css" type="text/css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whats Cookin</title>
@@ -19,52 +18,43 @@
       </div>
     </div>
     <nav class="nav-bar">
-      <form>
-        <input class="search-bar" type="text">
-        <button class="search-btn" id="searchBtn">Search</button>
-      </form>
+      <input class="search-bar" type="text" placeholder="Search ...">
+      <button class="search-btn" id="searchBtn">Search</button>
       <button class="saved-view-btn" id="savedViewBtn">Your Saved Recipes</button>
       <button class="home-view-btn hidden" id="homeViewBtn">Go Home</button>
     </nav>
     <main>
-      <nav class="nav-bar">
-          <input class="search-bar" id="searchBar" type="text">
-          <button class="search-button" id="searchButton">Search</button> 
-      </nav>
-      <section class="card-tiles" id="cardTileView">
-      </section>
-      <section class="name-results" id="nameResultsView">
-      </section>
-      <section class="tag-results" id="tagResultsView">
-      <section class="hidden" id="singleRecipeView">
+      <section class="card-tiles" id="cardTileView"></section>
+      <section id="nameResultsView"></section>
+      <section id="tagResultsView"></section>
+      <section class="hidden" id="singleRecipeView"></section>
+      <section class="creator-info-page hidden" id="creatorInfoPage">
+        <div class="creator-info" id="sophie">
+          <h2>Sophie L.</h2>
+          <img src="" alt="woman smiling with a hat and sunglasses next to a dog">
+          <a href="https://github.com/sophielabelle">GitHub</a>
+          <p>I love to snowboard, ride motorcycles, and snowboard. If I am not doing any of this you can catch me eating.</p>
+        </div>
+        <div class="creator-info" id="shane">
+          <h2>Shane M.</h2>
+          <img src="" alt="man smiling with glasses and long dark hair">
+          <a href="https://github.com/sdmisra">GitHub</a>
+          <p>I am a big fan of drumming and watching Lord of the Rings (AGAIN). I am passionate about a lot, but my fav food is deep dish pizza!</p>
+        </div>
+        <div class="creator-info" id="winston">
+          <h2>Winston C.</h2>
+          <img src="" alt="picture of a blonde man with glasses, big headphones and headband">
+          <a href="https://github.com/WinstonCalhoun">GitHub</a>
+          <p>I love to cook and play video games. I would love to one day code and create cooking video games.</p>
+        </div>
+        <div class="creator-info" id="bea">
+          <h2>Bea O.</h2>
+          <img src="" alt="woman similing with dark hair smiling in front of a brick wall">
+          <a href="https://github.com/bea-ordonez">GitHub</a>
+          <p>On a Saturday night you can catch me watching Saturday Night Live! I also really love volley ball and eating Pho!</p>
+        </div>
       </section>
     </main>
-    <section class="creator-info-page hidden" id="creatorInfoPage">
-      <div class="creator-info" id="sophie">
-        <p>Sophie L.</p>
-        <img src="" alt="woman smiling with a hat and sunglasses next to a dog">
-        <a href="https://github.com/sophielabelle">GitHub</a>
-        <p>I love to snowboard, ride motorcycles, and snowboard. If I am not doing any of this you can catch me eating.</p>
-      </div>
-      <div class="creator-info" id="shane">
-        <p>Shane M.</p>
-        <img src="" alt="man smiling with glasses and long dark hair">
-        <a href="https://github.com/sdmisra">GitHub</a>
-        <p>I am a big fan of drumming and watching Lord of the Rings (AGAIN). I am passionate about a lot but my fav food is deep dish pizza!</p>
-      </div>
-      <div class="creator-info" id="winston">
-        <p>Winston C.</p>
-        <img src="" alt="picture of a blonde man with glasses, big headphones and headband">
-        <a href="https://github.com/WinstonCalhoun">GitHub</a>
-        <p>I love to cook and play video games. I would love to one day code and creat cooking video games</p>
-      </div>
-      <div class="creator-info" id="bea">
-        <p>Bea O.</p>
-        <img src="" alt="woman similing with dark hair smiling in front of a brick wall">
-        <a href="https://github.com/bea-ordonez">GitHub</a>
-        <p></p>
-      </div>
-    </section>
   </body>
   <!-- Do not include the scripts.js file here - it is done automatically by the webpack server -->
   <script src="bundle.js"></script>

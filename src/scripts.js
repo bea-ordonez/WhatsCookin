@@ -4,126 +4,99 @@ import RecipeRepository from '../src/classes/RecipeRepository';
 import Recipe from '../src/classes/Recipe'
 import recipeData from './data/recipes';
 import usersData from './data/users';
+
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 // import './images/turing-logo.png'
 
-
-const newUser = new User;
-let currentUser;
-
-//api calls here to initialize our datasets
-//
-const userData = fetch("https://what-s-cookin-starter-kit.herokuapp.com/api/v1/users").then(response=>response.json()).catch(data=>console.log(data))
-console.log(userData);
-
-//header that welcomes user based on user data
-
-//even handler /listener for form and form data
-//search bar will return recipe based on taking in
-//name or tag from recipeRepository
-const recipeRepository = new RecipeRepository(recipeData);
-// const globalArray = [];
-
 const searchBarBtn = document.querySelector('#searchBtn');
 const savedViewBtn = document.querySelector('#savedViewBtn');
-const userNamePrompt = document.querySelector('#userName');
-const cardTileDisplay = document.querySelector('#cardTileView');
+const homeViewBtn = document.querySelector('#homeViewBtn');
+const infoBtn = document.querySelector('#infoBtn');
 const searchBarInput =document.querySelector('#searchBar')
-const tagSeachResults = document.querySelector('#tagSearchResults')
+
+const cardTileDisplay = document.querySelector('#cardTileView');
+const singleRecipeDisplay = document.querySelector('#singleRecipeView');
+const insertUserName = document.querySelector('#userName')
 const nameSearchResults = document.querySelector('#nameResultsView')
 const tagSearchResults = document.querySelector('#tagResultsView')
 
-const welcomeMessage = document.querySelector('#userName')
-
-// Event Listeners
-// window.addEventListener('load', function(){
-//     console.log('hello')
-// });
-window.addEventListener('load', () => {insertRecipeCards(recipeData)});
-
-window.addEventListener('load', function() {
-    getRandomUser();
-});
-
-searchBarBtn.addEventListener( 'click', function() {
-    cardTileDisplay.innerHTML = "";
-    getRecipeByTag();
-    getRecipeByName();
-    displayNoResults();
-});
-
-searchBarInput.addEventListener( 'change', () => {
-cardTileDisplay.innerHTML = "";    
-getRecipeByTag();
-getRecipeByName();
-displayNoResults();
-  getRecipeByTag();
-  getRecipeByName();
-const singleRecipeDisplay = document.querySelector('#singleRecipeView');
-const homeViewBtn = document.querySelector('#homeViewBtn');
-const infoBtn = document.querySelector('#infoBtn');
 const creatorDisplay = document.querySelector('#creatorInfoPage')
+const recipeRepository = new RecipeRepository(recipeData);
+
+
 // Event Listeners
-window.addEventListener('load', () => {insertRecipeCards(recipeData)});
+window.addEventListener('load', () => {
+  insertRecipeCards(recipeData)
+  getRandomUser();
+});
+
 cardTileDisplay.addEventListener('dblclick', (event) => {
   if (event.target.closest('.card')) {
     showSingleRecipe(event);
   }
 });
+
 homeViewBtn.addEventListener('click', () => {
   showHomeView();
 })
-infoBtn.addEventListener('click', showInfo)
-// searchBarBtn.addEventListener('click', function() {
-//   getRecipeByTag();
-//   getRecipeByName();
-// });
+
+searchBarBtn.addEventListener( 'click', function() {
+  cardTileDisplay.innerHTML = "";
+  getRecipeByTag();
+  getRecipeByName();
+  displayNoResults();
+});
+
+searchBarInput.addEventListener( 'change', () => {
+  cardTileDisplay.innerHTML = "";    
+  getRecipeByTag();
+  getRecipeByName();
+  displayNoResults();
+})
+
+infoBtn.addEventListener('click', showInfo);
 
 // Event handlers 
 function getRecipeByTag() {
-    let tagResults = [];
-    let userInput = searchBarInput.value;
-    tagResults = recipeRepository.filterByTag(userInput);
-    tagResults.forEach(result => {
-        tagSearchResults.innerHTML += `<section class="tagResults"><h1 class="searched-recipe" id=${result.tags}></h1></section>`
-    });
-    insertRecipeCards(tagResults);
+  let tagResults = [];
+  let userInput = searchBarInput.value;
+  tagResults = recipeRepository.filterByTag(userInput);
+  tagResults.forEach(result => {
+    tagSearchResults.innerHTML += `<section class="tagResults"><h1 class="searched-recipe" id=${result.tags}></h1></section>`
+  });
+  insertRecipeCards(tagResults);
+}
+
+function getRecipeByName() {
+  let nameResults = [];
+  let userInput = searchBarInput.value;
+  nameResults = recipeRepository.filterByName(userInput);
+  nameResults.forEach(result => {
+    nameSearchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
+  });
+  insertRecipeCards(nameResults);
+};
 
 function getRandomUser() {
-    let randomIndex = Math.floor(Math.random() * usersData.length);
-    currentUser = new User(usersData[randomIndex]);
-    welcomeUser();
-    return currenUser
+  let randomIndex = Math.floor(Math.random() * usersData.length);
+  currentUser = new User(usersData[randomIndex]);
+  welcomeUser();
+  return currentUser;
 };
 
 function welcomeUser() {
-    if (usersData.name) {
-        welcomeMessage.innerHTML = `${usersData.name}`;
-    };
-};
-
-function getRecipeByTag(userInput) {
-  if ( userInput.includes(RecipeRepository.filteredList.filterByTag()));
-};
-
-function getRecipeByName() {
-    let nameResults = [];
-    let userInput = searchBarInput.value;
-    nameResults = recipeRepository.filterByName(userInput);
-    nameResults.forEach(result => {
-        nameSearchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
-    });
-    insertRecipeCards(nameResults);
+  if (usersData.name) {
+    insertUserName.innerHTML = `${usersData.name}`;
+  };
 };
 
 // function displayNoResults() {
-//     if (nameResults.length === 0 && tagResults.length === 0) {
-//         nameSearchResults.innerHTML = `<h1>No results found.</h1>`
-// }
+//   if (nameResults.length === 0 && tagResults.length === 0) {
+//     nameSearchResults.innerHTML = `<h1>No results found.</h1>`
+//   }
 // }
 
 function insertRecipeCards(array) {
-    // cardTileDisplay.innerHTML = "";
   for(let i = 0; i < array.length; i++){
     cardTileDisplay.innerHTML += 
       `<section class="card" id="${array[i].id}">
@@ -158,7 +131,6 @@ function showSingleRecipe(event) {
   </section>`
 }
 // Functions
-// this will populate all the cards in an array to either using the saved recipes or the original load recipes
 function showHomeView() {
   console.log('Is this button really a button?');
   show(cardTileDisplay);
