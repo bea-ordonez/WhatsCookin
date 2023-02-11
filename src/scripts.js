@@ -1,9 +1,29 @@
 import './styles.css';
-import apiCalls from './apiCalls';
+import fetchData from './apiCalls';
 import RecipeRepository from '../src/classes/RecipeRepository';
-import Recipe from '../src/classes/Recipe'
-import recipeData from './data/recipes';
-import usersData from './data/users';
+import Recipe from '../src/classes/Recipe';
+import Ingredient from './classes/Ingredient';
+import User from './classes/User';
+
+
+
+Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')])
+.then(vals => {
+  let userData = vals[0].usersData;
+  let ingredientsData = vals[1].ingredientsData;
+  let recipesData = vals[2].recipeData;
+  let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
+  // use the make recipe list method on recipeRepo var to get the recipe list as isntances of Recipe
+  insertRecipeCards(recipesData);
+  getRandomUser(userData)
+  cardTileDisplay.addEventListener('click', (event) => {
+    if (event.target.closest('.card')) {
+      showSingleRecipe(event, recipeRepo);
+    }
+  });
+})
+
+
 
 // An example of how you tell webpack to use an image (also need to link to it in the index.html)
 // import './images/turing-logo.png'
@@ -12,29 +32,23 @@ const searchBarBtn = document.querySelector('#searchBtn');
 const savedViewBtn = document.querySelector('#savedViewBtn');
 const homeViewBtn = document.querySelector('#homeViewBtn');
 const infoBtn = document.querySelector('#infoBtn');
-const searchBarInput =document.querySelector('#searchBar')
+const searchBarInput =document.querySelector('#searchBar');
 
 const cardTileDisplay = document.querySelector('#cardTileView');
 const singleRecipeDisplay = document.querySelector('#singleRecipeView');
-const insertUserName = document.querySelector('#userName')
-const nameSearchResults = document.querySelector('#nameResultsView')
-const tagSearchResults = document.querySelector('#tagResultsView')
+const insertUserName = document.querySelector('#userName');
+const nameSearchResults = document.querySelector('#nameResultsView');
+const tagSearchResults = document.querySelector('#tagResultsView');
 
-const creatorDisplay = document.querySelector('#creatorInfoPage')
-const recipeRepository = new RecipeRepository(recipeData);
+const creatorDisplay = document.querySelector('#creatorInfoPage');
+// const recipeRepository = new RecipeRepository(recipeData);
 
 
 // Event Listeners
-window.addEventListener('load', () => {
-  insertRecipeCards(recipeData)
-  getRandomUser();
-});
-
-cardTileDisplay.addEventListener('dblclick', (event) => {
-  if (event.target.closest('.card')) {
-    showSingleRecipe(event);
-  }
-});
+// window.addEventListener('load', () => {
+//   insertRecipeCards(recipesData)
+//   getRandomUser();
+// });
 
 homeViewBtn.addEventListener('click', () => {
   showHomeView();
@@ -47,7 +61,7 @@ searchBarBtn.addEventListener( 'click', function() {
   displayNoResults();
 });
 
-searchBarInput.addEventListener( 'change', () => {
+searchBarInput.addEventListener('change', () => {
   cardTileDisplay.innerHTML = "";    
   getRecipeByTag();
   getRecipeByName();
@@ -60,7 +74,7 @@ infoBtn.addEventListener('click', showInfo);
 function getRecipeByTag() {
   let tagResults = [];
   let userInput = searchBarInput.value;
-  tagResults = recipeRepository.filterByTag(userInput);
+  tagResults = recipeRepo.filterByTag(userInput);
   tagResults.forEach(result => {
     tagSearchResults.innerHTML += `<section class="tagResults"><h1 class="searched-recipe" id=${result.tags}></h1></section>`
   });
@@ -70,23 +84,23 @@ function getRecipeByTag() {
 function getRecipeByName() {
   let nameResults = [];
   let userInput = searchBarInput.value;
-  nameResults = recipeRepository.filterByName(userInput);
+  nameResults = recipeRepo.filterByName(userInput);
   nameResults.forEach(result => {
     nameSearchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
   });
   insertRecipeCards(nameResults);
 };
 
-function getRandomUser() {
-  let randomIndex = Math.floor(Math.random() * usersData.length);
-  currentUser = new User(usersData[randomIndex]);
-  welcomeUser();
+function getRandomUser(userInfo) {
+  let randomIndex = Math.floor(Math.random() * userInfo.length);
+  let currentUser = new User(userInfo[randomIndex]);
+  welcomeUser(currentUser);
   return currentUser;
 };
 
-function welcomeUser() {
-  if (usersData.name) {
-    insertUserName.innerHTML = `${usersData.name}`;
+function welcomeUser(user) {
+  if (user.name) {
+    insertUserName.innerHTML = `${user.name}`;
   };
 };
 
@@ -106,15 +120,18 @@ function insertRecipeCards(array) {
   };
 };
 
-function showSingleRecipe(event) {
+function showSingleRecipe(event, repo, ingredient) {
   show(singleRecipeDisplay);
   show(homeViewBtn);
   hide(cardTileDisplay);
-  const recipeElement = event.target;
+  const element = event.target.id
+  console.log(element)
+  const thing = repo.findRecipe(element)
+  console.log(thing)
   singleRecipeDisplay.innerHTML = 
-  `<section class="single-recipe" id="${recipeElement.id}">
-  <h2>Loaded Chocolate Chip Pudding Cookie Cups</h2>
-  <img src="https://cookgem.com/wp-content/uploads/2021/09/Are-Spaghettios-Vegan-2.jpg" alt="image of ${recipeElement.name}">
+  `<section class="single-recipe" id="${thing.id}">
+  <h2>${thing.name}</h2>
+  <img src="${thing.image}" alt="image of ${thing.name}">
   <div class="rating">
     <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
     <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
@@ -123,16 +140,16 @@ function showSingleRecipe(event) {
     <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
   </div>
   <div>
-    <p>${recipeElement.instructions}</p>
+    <p>${thing.retrieveIngredientInfo()}</p>
   </div>
   <div>
-    <p>${recipeElement.ingredients}</p>
+    <p>${thing.giveInstructionsForRecipe()}</p>
   </div>
   </section>`
 }
+
 // Functions
 function showHomeView() {
-  console.log('Is this button really a button?');
   show(cardTileDisplay);
   hide(singleRecipeDisplay);
   hide(homeViewBtn);

@@ -1,9 +1,10 @@
 import Recipe from './Recipe';
 
 class RecipeRepository {
-  constructor(recipeData) {
-    this.recipeList = recipeData.map(recipe => new Recipe(recipe));
+  constructor(recipeData, totalIngredients) {
+    this.recipeList = recipeData.map(recipe => new Recipe(recipe, this.allIngredients));
     this.filteredList; 
+    this.allIngredients = totalIngredients
   };
 
   filterByTag(tag) {
@@ -23,6 +24,16 @@ class RecipeRepository {
   //   this.filteredList = findByName;
   //   return findByName;
   // };
+
+  findRecipe(id) {
+    const oneRec = this.recipeList.find(recipe => {
+      let idToNum = parseInt(id)
+      if(recipe.id === idToNum){
+        return recipe;
+      }
+    });
+    return oneRec;
+  }
 };
 
 export default RecipeRepository;
