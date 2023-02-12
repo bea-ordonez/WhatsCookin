@@ -2,6 +2,7 @@ import Ingredient from './Ingredient';
 
 class Recipe {
   constructor(recipe) {
+    console.log(recipe)
     this.id = recipe.id;
     this.image = recipe.image;
     this.ingredients = recipe.ingredients;

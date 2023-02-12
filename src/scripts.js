@@ -19,9 +19,13 @@ const singleRecipeDisplay = document.querySelector('#singleRecipeView');
 const insertUserName = document.querySelector('#userName')
 const nameSearchResults = document.querySelector('#nameResultsView')
 const tagSearchResults = document.querySelector('#tagResultsView')
+const savedRecipesView = document.querySelector('#savedRecipesView')
 
 const creatorDisplay = document.querySelector('#creatorInfoPage')
 const recipeRepository = new RecipeRepository(recipeData);
+
+const savedRecipes = []
+
 
 
 // Event Listeners
@@ -38,7 +42,7 @@ cardTileDisplay.addEventListener('dblclick', (event) => {
 
 homeViewBtn.addEventListener('click', () => {
   showHomeView();
-})
+});
 
 searchBarBtn.addEventListener( 'click', function() {
   cardTileDisplay.innerHTML = "";
@@ -47,14 +51,19 @@ searchBarBtn.addEventListener( 'click', function() {
   displayNoResults();
 });
 
-searchBarInput.addEventListener( 'change', () => {
+searchBarInput.addEventListener('change', () => {
   cardTileDisplay.innerHTML = "";    
   getRecipeByTag();
   getRecipeByName();
   displayNoResults();
-})
+});
 
 infoBtn.addEventListener('click', showInfo);
+savedViewBtn.addEventListener('click', () => {
+    cardTileDisplay.innerHTML = "";
+    viewSavedRecipes();
+});
+
 
 // Event handlers 
 function getRecipeByTag() {
@@ -77,6 +86,42 @@ function getRecipeByName() {
   insertRecipeCards(nameResults);
 };
 
+function saveRecipe(event) {
+    
+
+    if ( event.target.id ) {
+        event.target.classList.add("hidden")
+        console.log(event)
+        console.log(event.target.id)
+        const recipeObj = recipeRepository.getRecipeById(parseInt(event.target.id))
+        console.log(recipeObj)
+
+        const isRecipeSelected = savedRecipes.includes(recipeObj);
+        if (!isRecipeSelected) {
+            savedRecipes.push(recipeObj) //make the cahnee
+        } else {
+            savedRecipes.splice(savedRecipes.indexOf(recipeObj), 1)
+        }
+        
+        console.log(savedRecipes)
+    }
+
+
+
+    // savedRecipesView.innerHTML = "";
+    // if (event.target.id === Recipe.id) {
+    //    savedRecipes.forEach(recipe => {
+    //    savedRecipesView.innerHTML += `<section class="savedResults"><h1 class="saved-recipe" id=${recipe.id}></h1></section>`
+    //     })
+    // }
+    // insertRecipeCards(savedRecipes)
+}
+
+function viewSavedRecipes() {
+    savedRecipesView.innerHTML = "";
+    insertRecipeCards(savedRecipes, true)
+}
+
 function getRandomUser() {
   let randomIndex = Math.floor(Math.random() * usersData.length);
   currentUser = new User(usersData[randomIndex]);
@@ -96,14 +141,25 @@ function welcomeUser() {
 //   }
 // }
 
-function insertRecipeCards(array) {
+function insertRecipeCards(array, showSelected = false) {
   for(let i = 0; i < array.length; i++){
+
+    const isRecipeSelected = savedRecipes.includes(array[i])
+    console.log(array[i].id + " " + isRecipeSelected)
+
+    if (!isRecipeSelected || showSelected){
     cardTileDisplay.innerHTML += 
       `<section class="card" id="${array[i].id}">
       <h2>${array[i].name}</h2>
       <img src="${array[i].image}" alt="image of ${array[i].name}">
-      </section>`;
+      </section>`;}
   };
+
+  const allCards = document.querySelectorAll(".card");
+  allCards.forEach(card => {
+    card.addEventListener('click', saveRecipe)
+  })
+  console.log(allCards)
 };
 
 function showSingleRecipe(event) {

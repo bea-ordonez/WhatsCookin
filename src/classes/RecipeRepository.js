@@ -18,11 +18,12 @@ class RecipeRepository {
     return findByName;
   };
 
-  // filterByNameOrTag(foodName) {
-  //   const findByName = this.recipeList.filter(recipe => recipe.name.toLowerCase().includes(foodName.toLowerCase()) || recipe.tags.includes(tag));
-  //   this.filteredList = findByName;
-  //   return findByName;
-  // };
+  getRecipeById(id) {
+    const getId = this.recipeList.find(recipe => {
+      return recipe.id === id;
+    });
+    return getId;
+  };
 };
 
 export default RecipeRepository;
