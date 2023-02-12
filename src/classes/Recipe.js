@@ -15,7 +15,6 @@ class Recipe {
     const currentIngredients = this.ingredients.map(i => {
       let newIng = new Ingredient(i);
       console.log('newIng:', newIng);
-      console.log('todos', this.todosIngredients)
       newIng.name = newIng.returnIngredientName(this.todosIngredients,i.id);
       newIng.costInCents = newIng.returnIngredientCost(this.todosIngredients, i.id);
       return newIng;
@@ -25,6 +24,7 @@ class Recipe {
   };
 
   returnCostOfIngredients() {
+    console.log('returning cost from:', this)
     const total = this.ingredients.reduce((total, cur) => {
       total += (cur.costInCents * cur.quantity.amount);
       return total;

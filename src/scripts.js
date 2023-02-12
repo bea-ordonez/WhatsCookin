@@ -124,18 +124,19 @@ function showSingleRecipe(event, repo, ingredients) {
   show(singleRecipeDisplay);
   show(homeViewBtn);
   hide(cardTileDisplay);
-  let todosIng = ingredients;
-  console.log('todos given?', repo.todosIngredients);
+  let fetchedIng = ingredients;
   const element = event.target.id
-  console.log('event.target.id', element)
-  const thing = repo.findRecipe(element)
-  console.log('found thing', thing)
-  thing.todosIngredients = todosIng;
-  console.log('invoke retrieve:', thing.retrieveIngredientInfo())
+  console.log('event.target.id:', element)
+  const foundRecipe = repo.findRecipe(element)
+  console.log('found recipe before retrieval:', foundRecipe)
+  foundRecipe.todosIngredients = fetchedIng;
+  let foundIngredients = foundRecipe.retrieveIngredientInfo();
+  let foundInstructions = foundRecipe.giveInstructionsForRecipe();
+  // console.log('return cost?', foundRecipe.returnCostOfIngredients())
   singleRecipeDisplay.innerHTML = 
-  `<section class="single-recipe" id="${thing.id}">
-  <h2>${thing.name}</h2>
-  <img src="${thing.image}" alt="image of ${thing.name}">
+  `<section class="single-recipe" id="${foundRecipe.id}">
+  <h2>${foundRecipe.name}</h2>
+  <img src="${foundRecipe.image}" alt="image of ${foundRecipe.name}">
   <div class="rating">
     <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
     <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
@@ -144,10 +145,10 @@ function showSingleRecipe(event, repo, ingredients) {
     <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
   </div>
   <div>
-    <p>${thing.ingredients}</p>
+    <p>${foundIngredients.map((ing) => ` ${ing.name}`)}</p>
   </div>
   <div>
-    <p>${thing.instructions}</p>
+    <p>${foundInstructions.map((inst) =>` ${inst}`)}</p>
   </div>
   </section>`
 }

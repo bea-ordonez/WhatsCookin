@@ -6,7 +6,6 @@ class Ingredient {
   };
 
   returnIngredientName(array, num) {
-    console.log('line 9 - trying to read this array, num:', array, num)
     const findName = array.find(ingredient => ingredient.id === num);
     if (findName === undefined) {
       console.log('error in ingred name')
@@ -18,7 +17,6 @@ class Ingredient {
   };
 
   returnIngredientCost(array, num) {
-    console.log('line 21 - trying to read this array, num:', array, num)
     const findCost = array.find(ingredient => ingredient.id === num);
     if (findCost === undefined) {
       console.log('error in ingred cost')
