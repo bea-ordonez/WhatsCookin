@@ -17,8 +17,8 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
   insertRecipeCards(recipesData);
   getRandomUser(userData)
   cardTileDisplay.addEventListener('click', (event) => {
-    if (event.target.closest('.card')) {
-      showSingleRecipe(event, recipeRepo);
+    if (event.target.closest('.card') || event.target.id === event) {
+      showSingleRecipe(event, recipeRepo, ingredientsData);
     }
   });
 })
@@ -114,20 +114,24 @@ function insertRecipeCards(array) {
   for(let i = 0; i < array.length; i++){
     cardTileDisplay.innerHTML += 
       `<section class="card" id="${array[i].id}">
-      <h2>${array[i].name}</h2>
-      <img src="${array[i].image}" alt="image of ${array[i].name}">
+      <h2 id="${array[i].id}">${array[i].name}</h2>
+      <img src="${array[i].image}" alt="image of ${array[i].name} id="${array[i].id}">
       </section>`;
   };
 };
 
-function showSingleRecipe(event, repo, ingredient) {
+function showSingleRecipe(event, repo, ingredients) {
   show(singleRecipeDisplay);
   show(homeViewBtn);
   hide(cardTileDisplay);
+  let todosIng = ingredients;
+  console.log('todos given?', repo.todosIngredients);
   const element = event.target.id
-  console.log(element)
+  console.log('event.target.id', element)
   const thing = repo.findRecipe(element)
-  console.log(thing)
+  console.log('found thing', thing)
+  thing.todosIngredients = todosIng;
+  console.log('invoke retrieve:', thing.retrieveIngredientInfo())
   singleRecipeDisplay.innerHTML = 
   `<section class="single-recipe" id="${thing.id}">
   <h2>${thing.name}</h2>
@@ -140,10 +144,10 @@ function showSingleRecipe(event, repo, ingredient) {
     <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
   </div>
   <div>
-    <p>${thing.retrieveIngredientInfo()}</p>
+    <p>${thing.ingredients}</p>
   </div>
   <div>
-    <p>${thing.giveInstructionsForRecipe()}</p>
+    <p>${thing.instructions}</p>
   </div>
   </section>`
 }
