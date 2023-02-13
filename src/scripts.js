@@ -26,8 +26,6 @@ const recipeRepository = new RecipeRepository(recipeData);
 
 const savedRecipes = []
 
-
-
 // Event Listeners
 window.addEventListener('load', () => {
   insertRecipeCards(recipeData)
@@ -64,7 +62,6 @@ savedViewBtn.addEventListener('click', () => {
     viewSavedRecipes();
 });
 
-
 // Event handlers 
 function getRecipeByTag() {
   let tagResults = [];
@@ -74,7 +71,7 @@ function getRecipeByTag() {
     tagSearchResults.innerHTML += `<section class="tagResults"><h1 class="searched-recipe" id=${result.tags}></h1></section>`
   });
   insertRecipeCards(tagResults);
-}
+};
 
 function getRecipeByName() {
   let nameResults = [];
@@ -87,40 +84,23 @@ function getRecipeByName() {
 };
 
 function saveRecipe(event) {
-    
-
+    //remove the event listener once the card is saved 
     if ( event.target.id ) {
-        event.target.classList.add("hidden")
-        console.log(event)
-        console.log(event.target.id)
-        const recipeObj = recipeRepository.getRecipeById(parseInt(event.target.id))
-        console.log(recipeObj)
-
+        event.target.classList.add("hidden");
+        const recipeObj = recipeRepository.getRecipeById(parseInt(event.target.id));
         const isRecipeSelected = savedRecipes.includes(recipeObj);
         if (!isRecipeSelected) {
-            savedRecipes.push(recipeObj) //make the cahnee
+            savedRecipes.push(recipeObj);
         } else {
-            savedRecipes.splice(savedRecipes.indexOf(recipeObj), 1)
-        }
-        
-        console.log(savedRecipes)
-    }
-
-
-
-    // savedRecipesView.innerHTML = "";
-    // if (event.target.id === Recipe.id) {
-    //    savedRecipes.forEach(recipe => {
-    //    savedRecipesView.innerHTML += `<section class="savedResults"><h1 class="saved-recipe" id=${recipe.id}></h1></section>`
-    //     })
-    // }
-    // insertRecipeCards(savedRecipes)
-}
+            savedRecipes.splice(savedRecipes.indexOf(recipeObj), 1);
+        };
+    };
+};
 
 function viewSavedRecipes() {
     savedRecipesView.innerHTML = "";
-    insertRecipeCards(savedRecipes, true)
-}
+    insertRecipeCards(savedRecipes, true);
+};
 
 function getRandomUser() {
   let randomIndex = Math.floor(Math.random() * usersData.length);
@@ -135,18 +115,9 @@ function welcomeUser() {
   };
 };
 
-// function displayNoResults() {
-//   if (nameResults.length === 0 && tagResults.length === 0) {
-//     nameSearchResults.innerHTML = `<h1>No results found.</h1>`
-//   }
-// }
-
 function insertRecipeCards(array, showSelected = false) {
   for(let i = 0; i < array.length; i++){
-
-    const isRecipeSelected = savedRecipes.includes(array[i])
-    console.log(array[i].id + " " + isRecipeSelected)
-
+    const isRecipeSelected = savedRecipes.includes(array[i]);
     if (!isRecipeSelected || showSelected){
     cardTileDisplay.innerHTML += 
       `<section class="card" id="${array[i].id}">
@@ -154,12 +125,10 @@ function insertRecipeCards(array, showSelected = false) {
       <img src="${array[i].image}" alt="image of ${array[i].name}">
       </section>`;}
   };
-
   const allCards = document.querySelectorAll(".card");
   allCards.forEach(card => {
-    card.addEventListener('click', saveRecipe)
-  })
-  console.log(allCards)
+    card.addEventListener('click', saveRecipe);
+  });
 };
 
 function showSingleRecipe(event) {
