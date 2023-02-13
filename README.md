@@ -21,14 +21,10 @@ To install project dependencies: Remember to use ‘npm install’ before trying
 This project was assigned in week 2 of module 2 for the Frontend Program, this work was completed between the 3rd and the 13th.
 
 # Contributors:
-Sophie LaBelle
-https://github.com/sophielabelle
-Winston Calhoun
-https://github.com/WinstonCalhoun
-Bea Ordonez
-https://github.com/bea-ordonez
-Shane Misra
-https://github.com/sdmisra
+[Sophie LaBelle](https://github.com/sophielabelle)
+[Winston Calhoun](https://github.com/WinstonCalhoun)
+[Bea Ordonez](https://github.com/bea-ordonez)
+[Shane Misra](https://github.com/sdmisra)
 
 # Learning Goals:
 
