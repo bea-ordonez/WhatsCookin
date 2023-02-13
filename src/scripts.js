@@ -17,6 +17,7 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
     if (event.target.closest('.card') || event.target.id === event) {
       showSingleRecipe(event, recipeRepo, ingredientsData);
     };
+    getRandomUser(userData);
   });
 });
 
@@ -96,6 +97,10 @@ function insertRecipeCards(array) {
       `<section class="card" id="${array[i].id}">
       <h2 id="${array[i].id}">${array[i].name}</h2>
       <img src="${array[i].image}" alt="image of ${array[i].name} id="${array[i].id}">
+      <div class="card-buttons">
+        <button class="open-single-recipe" id="${array[i].id}">View Recipe</button>
+        <button class="save-recipe-btn" id="saveRecipeBtn" >Save Recipe</>
+      </div>  
       </section>`
   };
 };
