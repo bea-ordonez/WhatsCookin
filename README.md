@@ -28,10 +28,12 @@ This project was assigned in week 2 of module 2 for the Frontend Program, this w
 
 # Learning Goals:
 
-1.
-1.
-1.
-1.
+1. Implement ES6 classes that communicate to each other as needed
+1. Use object and array prototype methods to perform data manipulation
+1. Create a user interface that is easy to use and clearly displays information.
+1. Write modular, reusable code that follows SRP (Single Responsibility Principle)
+1. Implement a robust testing suite using TDD
+1. Make network requests to retrieve data
 
 ## Future Feature Ideas:
 
