@@ -2,7 +2,7 @@
 
 # Abstract:
 
-This project represents site that allows users to peruse a list of 50 delicious recipes, as well as search through the larger list to find recipes based off of tags or for specific recipe names.
+This project represents a site that allows users to peruse a list of 50 delicious recipes, as well as search through the larger list to find recipes based off of tags or for specific recipe names.
 
 
 # Installation Instructions:
