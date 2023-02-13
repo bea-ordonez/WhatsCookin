@@ -14,8 +14,10 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
   insertRecipeCards(recipesData);
   getRandomUser(userData);
   
-  card.addEventListener('click', (event) => {
-    showSingleRecipe(event, recipeRepo, ingredientsData);
+  cardTileDisplay.addEventListener('click', (event) => {
+    if(event.target.classList == 'open-single-recipe') {
+      showSingleRecipe(event, recipeRepo, ingredientsData);
+    }
   });
 });
 
@@ -30,7 +32,7 @@ const card = document.querySelector('.card')
 const singleRecipeDisplay = document.querySelector('#singleRecipeView');
 
 const insertUserName = document.querySelector('#userName');
-const searchBarInput =document.querySelector('#searchBar');
+const searchBarInput = document.querySelector('#searchBar');
 const nameSearchResults = document.querySelector('#nameResultsView');
 const tagSearchResults = document.querySelector('#tagResultsView');
 const savedRecipesView = document.querySelector('#savedRecipesView');
@@ -109,9 +111,9 @@ function insertRecipeCards(array, showSelected = false) {
     const isRecipeSelected = savedRecipes.includes(array[i]);
     if (!isRecipeSelected || showSelected){
     cardTileDisplay.innerHTML += 
-      `<section class="card" id="${array[i].id}">
-      <h2 id="${array[i].id}">${array[i].name}</h2>
-      <img src="${array[i].image}" alt="image of ${array[i].name} id="${array[i].id}">
+      `<section class="card">
+      <h2>${array[i].name}</h2>
+      <img src="${array[i].image}" alt="image of ${array[i].name}">
       <div class="card-buttons">
         <button class="open-single-recipe" id="${array[i].id}">View Recipe</button>
         <button class="save-recipe-btn" id="saveRecipeBtn" >Save Recipe</>
@@ -132,7 +134,7 @@ function showSingleRecipe(event, repo, ingredients) {
   show(homeViewBtn);
   hide(cardTileDisplay);
   let fetchedIng = ingredients;
-  const element = event.target.parentElement.parentElement.id;
+  const element = event.target.id
   const foundRecipe = repo.findRecipe(element);
   foundRecipe.todosIngredients = fetchedIng;
   let foundIngredients = foundRecipe.retrieveIngredientInfo();
@@ -160,19 +162,9 @@ function showSingleRecipe(event, repo, ingredients) {
 };
 
 function getRandomUser(userInfo) {
-  console.log(userInfo)
   let randomIndex = Math.floor(Math.random() * userInfo.length);
   let currentUser = new User(userInfo[randomIndex]);
-  console.log(currentUser)
-  welcomeUser(currentUser);
-  return currentUser;
-};
-
-function welcomeUser(user) {
-  console.log(user.name)
-  if (user.name) {
-    insertUserName.innerHTML = `${user.name}`;
-  };
+  insertUserName.innerHTML = `${currentUser.name}`;
 };
 
 // Functions
