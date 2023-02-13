@@ -24,9 +24,14 @@ This project was assigned in week 2 of module 2 for the Frontend Program, this w
 [Sophie LaBelle](https://github.com/sophielabelle)\
 [Winston Calhoun](https://github.com/WinstonCalhoun)\
 [Bea Ordonez](https://github.com/bea-ordonez)\
-[Shane Misra](https://github.com/sdmisra)\
+[Shane Misra](https://github.com/sdmisra)
 
 # Learning Goals:
+
+1.
+1.
+1.
+1.
 
 ## Future Feature Ideas:
 
