@@ -42,7 +42,7 @@ h1 {
   width: auto;
   color: white;
   font-size: 40px;
-  text-shadow: 2px 2px black;
+  text-shadow: 4px 2px black;
 }
 
 main {
@@ -102,30 +102,28 @@ main {
   justify-content: flex-start;
   position: fixed;
   margin-top: 12vh;
-  background-color: #1e2947;
+  background-color: #5b6580;
   height: 100vh;
   width: 17vw;
   overflow-x: hidden;
 }
 
-.nav-bar > form {
+.nav-bar > label {
   margin-top: 20px;
-  margin-left: 20px;
-}
-
-button {
-  background-color: #5b6580;
-  height: 30px;
-  width: 106px;
-  border-radius: 18px;
-  margin: 5px;
+  text-shadow: 2px 2px black;
+  font-size: large;
   color: white;
 }
 
-button:hover,
-.card:hover {
-  cursor: pointer;
-  opacity: 0.5;
+.search-bar {
+  height: 20px;
+  width: 200px;
+  border: 2px solid #ffc430;
+  margin: 10px 0px 10px 0px;
+}
+
+.search-bar:hover {
+  border: 2px solid blue;
 }
 
 .util-btns {
@@ -136,11 +134,20 @@ button:hover,
   right: 0;
 }
 
-.search-bar {
-  height: 20px;
-  width: 200px;
+button {
+  background-color:#1e2947;
+  height: 35px;
+  width: 110px;
+  border-radius: 18px;
+  margin: 5px;
+  color: white;
+}
+
+button:hover,
+.card:hover {
+  cursor: pointer;
+  /* opacity: 0.5; */
   border: 2px solid #ffc430;
-  margin: 40px 0px 10px 0px;
 }
 
 /* Single Recipe View */
