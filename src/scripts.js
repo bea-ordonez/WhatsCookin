@@ -13,34 +13,29 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
   let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
   insertRecipeCards(recipesData);
   getRandomUser(userData);
-  cardTileDisplay.addEventListener('click', (event) => {
-    if (event.target.closest('.card') || event.target.id === event) {
-      showSingleRecipe(event, recipeRepo, ingredientsData);
-    };
-    getRandomUser(userData);
+  
+  card.addEventListener('click', (event) => {
+    showSingleRecipe(event, recipeRepo, ingredientsData);
   });
 });
 
+const singleRecipeBtn = document.querySelector('.open-single-recipe')
 const searchBarBtn = document.querySelector('#searchBtn');
 const savedViewBtn = document.querySelector('#savedViewBtn');
 const homeViewBtn = document.querySelector('#homeViewBtn');
 const infoBtn = document.querySelector('#infoBtn');
 
 const cardTileDisplay = document.querySelector('#cardTileView');
+const card = document.querySelector('.card')
 const singleRecipeDisplay = document.querySelector('#singleRecipeView');
-<<<<<<< HEAD
-const insertUserName = document.querySelector('#userName')
-const nameSearchResults = document.querySelector('#nameResultsView')
-const tagSearchResults = document.querySelector('#tagResultsView')
-const savedRecipesView = document.querySelector('#savedRecipesView')
-=======
+
 const insertUserName = document.querySelector('#userName');
 const searchBarInput =document.querySelector('#searchBar');
 const nameSearchResults = document.querySelector('#nameResultsView');
 const tagSearchResults = document.querySelector('#tagResultsView');
->>>>>>> 2cfc933aac8fb81dd6e51ad5c9d0a137c8f3c39c
+const savedRecipesView = document.querySelector('#savedRecipesView');
 
-const creatorDisplay = document.querySelector;
+const creatorDisplay = document.querySelector('#creatorInfoPage');
 
 const savedRecipes = []
 
@@ -90,12 +85,11 @@ function getRecipeByName() {
   insertRecipeCards(nameResults);
 };
 
-<<<<<<< HEAD
-function saveRecipe(event) {
+function saveRecipe(event, recipeRepo) {
     //remove the event listener once the card is saved 
-    if ( event.target.id ) {
+    if (event.target.id) {
         event.target.classList.add("hidden");
-        const recipeObj = recipeRepository.getRecipeById(parseInt(event.target.id));
+        const recipeObj = recipeRepo.getRecipeById(parseInt(event.target.id));
         const isRecipeSelected = savedRecipes.includes(recipeObj);
         if (!isRecipeSelected) {
             savedRecipes.push(recipeObj);
@@ -110,57 +104,27 @@ function viewSavedRecipes() {
     insertRecipeCards(savedRecipes, true);
 };
 
-function getRandomUser() {
-  let randomIndex = Math.floor(Math.random() * usersData.length);
-  currentUser = new User(usersData[randomIndex]);
-  welcomeUser();
-=======
-function getRandomUser(userInfo) {
-  let randomIndex = Math.floor(Math.random() * userInfo.length);
-  let currentUser = new User(userInfo[randomIndex]);
-  welcomeUser(currentUser);
->>>>>>> 2cfc933aac8fb81dd6e51ad5c9d0a137c8f3c39c
-  return currentUser;
-};
-
-function welcomeUser(user) {
-  if (user.name) {
-    insertUserName.innerHTML = `${user.name}`;
-  };
-};
-
-<<<<<<< HEAD
-function insertRecipeCards(array) {
-=======
 function insertRecipeCards(array, showSelected = false) {
->>>>>>> ee399f777ae4b0bc385b1b02b2dec2933f6f4e6a
   for(let i = 0; i < array.length; i++){
     const isRecipeSelected = savedRecipes.includes(array[i]);
     if (!isRecipeSelected || showSelected){
     cardTileDisplay.innerHTML += 
       `<section class="card" id="${array[i].id}">
-<<<<<<< HEAD
-      <h2>${array[i].name}</h2>
-      <img src="${array[i].image}" alt="image of ${array[i].name}">
-      </section>`;}
-=======
       <h2 id="${array[i].id}">${array[i].name}</h2>
       <img src="${array[i].image}" alt="image of ${array[i].name} id="${array[i].id}">
-<<<<<<< HEAD
       <div class="card-buttons">
         <button class="open-single-recipe" id="${array[i].id}">View Recipe</button>
         <button class="save-recipe-btn" id="saveRecipeBtn" >Save Recipe</>
       </div>  
-      </section>`
-=======
       </section>`;
->>>>>>> 2cfc933aac8fb81dd6e51ad5c9d0a137c8f3c39c
->>>>>>> ee399f777ae4b0bc385b1b02b2dec2933f6f4e6a
+    };
   };
-  const allCards = document.querySelectorAll(".card");
-  allCards.forEach(card => {
-    card.addEventListener('click', saveRecipe);
-  });
+  // const allCards = document.querySelectorAll(".card");
+  // allCards.forEach(card => {
+  //   card.addEventListener('click', (event) => {
+  //     saveRecipe(event, recipeRepo);
+  //   });
+  // });
 };
 
 function showSingleRecipe(event, repo, ingredients) {
@@ -168,8 +132,8 @@ function showSingleRecipe(event, repo, ingredients) {
   show(homeViewBtn);
   hide(cardTileDisplay);
   let fetchedIng = ingredients;
-  const element = event.target.id
-  const foundRecipe = repo.findRecipe(element)
+  const element = event.target.parentElement.parentElement.id;
+  const foundRecipe = repo.findRecipe(element);
   foundRecipe.todosIngredients = fetchedIng;
   let foundIngredients = foundRecipe.retrieveIngredientInfo();
   let foundInstructions = foundRecipe.giveInstructionsForRecipe();
@@ -186,13 +150,29 @@ function showSingleRecipe(event, repo, ingredients) {
   </div>
   <h3>Ingredients</h3>
   <div class="ingredients">
-    <p>${foundIngredients.map((ing) => ` ${ing.name}`)}</p>
+    <p>${foundIngredients.map((ing) => ` ${ing.name} `)}</p>
   </div>
   <h3>Instructions</h3>
   <div class="instructions">
-    <p>${foundInstructions.map((inst) =>` ${inst}`)}</p>
+    <p>${foundInstructions.map((inst) =>` ${inst} `)}</p>
   </div>
   </section>`
+};
+
+function getRandomUser(userInfo) {
+  console.log(userInfo)
+  let randomIndex = Math.floor(Math.random() * userInfo.length);
+  let currentUser = new User(userInfo[randomIndex]);
+  console.log(currentUser)
+  welcomeUser(currentUser);
+  return currentUser;
+};
+
+function welcomeUser(user) {
+  console.log(user.name)
+  if (user.name) {
+    insertUserName.innerHTML = `${user.name}`;
+  };
 };
 
 // Functions

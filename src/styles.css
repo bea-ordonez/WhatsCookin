@@ -101,11 +101,12 @@ main {
   align-items: center;
   justify-content: flex-start;
   position: fixed;
-  margin-top: 12vh;
-  background-color: #5b6580;
   height: 100vh;
   width: 17vw;
   overflow-x: hidden;
+  margin-top: 12vh;
+  border-radius: 5px;
+  background-color: #5b6580;
 }
 
 .nav-bar > label {
