@@ -1,7 +1,12 @@
 import Ingredient from './Ingredient';
 
 class Recipe {
+<<<<<<< HEAD
+  constructor(recipe) {
+    console.log(recipe)
+=======
   constructor(recipe, allIngreds) {
+>>>>>>> 2cfc933aac8fb81dd6e51ad5c9d0a137c8f3c39c
     this.id = recipe.id;
     this.image = recipe.image;
     this.ingredients = recipe.ingredients;

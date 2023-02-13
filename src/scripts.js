@@ -36,13 +36,21 @@ const searchBarInput =document.querySelector('#searchBar');
 
 const cardTileDisplay = document.querySelector('#cardTileView');
 const singleRecipeDisplay = document.querySelector('#singleRecipeView');
+<<<<<<< HEAD
+const insertUserName = document.querySelector('#userName')
+const nameSearchResults = document.querySelector('#nameResultsView')
+const tagSearchResults = document.querySelector('#tagResultsView')
+const savedRecipesView = document.querySelector('#savedRecipesView')
+=======
 const insertUserName = document.querySelector('#userName');
 const nameSearchResults = document.querySelector('#nameResultsView');
 const tagSearchResults = document.querySelector('#tagResultsView');
+>>>>>>> 2cfc933aac8fb81dd6e51ad5c9d0a137c8f3c39c
 
 const creatorDisplay = document.querySelector('#creatorInfoPage');
 // const recipeRepository = new RecipeRepository(recipeData);
 
+const savedRecipes = []
 
 // Event Listeners
 // window.addEventListener('load', () => {
@@ -52,7 +60,7 @@ const creatorDisplay = document.querySelector('#creatorInfoPage');
 
 homeViewBtn.addEventListener('click', () => {
   showHomeView();
-})
+});
 
 searchBarBtn.addEventListener( 'click', function() {
   cardTileDisplay.innerHTML = "";
@@ -66,9 +74,13 @@ searchBarInput.addEventListener('change', () => {
   getRecipeByTag();
   getRecipeByName();
   displayNoResults();
-})
+});
 
 infoBtn.addEventListener('click', showInfo);
+savedViewBtn.addEventListener('click', () => {
+    cardTileDisplay.innerHTML = "";
+    viewSavedRecipes();
+});
 
 // Event handlers 
 function getRecipeByTag() {
@@ -79,7 +91,7 @@ function getRecipeByTag() {
     tagSearchResults.innerHTML += `<section class="tagResults"><h1 class="searched-recipe" id=${result.tags}></h1></section>`
   });
   insertRecipeCards(tagResults);
-}
+};
 
 function getRecipeByName() {
   let nameResults = [];
@@ -91,10 +103,36 @@ function getRecipeByName() {
   insertRecipeCards(nameResults);
 };
 
+<<<<<<< HEAD
+function saveRecipe(event) {
+    //remove the event listener once the card is saved 
+    if ( event.target.id ) {
+        event.target.classList.add("hidden");
+        const recipeObj = recipeRepository.getRecipeById(parseInt(event.target.id));
+        const isRecipeSelected = savedRecipes.includes(recipeObj);
+        if (!isRecipeSelected) {
+            savedRecipes.push(recipeObj);
+        } else {
+            savedRecipes.splice(savedRecipes.indexOf(recipeObj), 1);
+        };
+    };
+};
+
+function viewSavedRecipes() {
+    savedRecipesView.innerHTML = "";
+    insertRecipeCards(savedRecipes, true);
+};
+
+function getRandomUser() {
+  let randomIndex = Math.floor(Math.random() * usersData.length);
+  currentUser = new User(usersData[randomIndex]);
+  welcomeUser();
+=======
 function getRandomUser(userInfo) {
   let randomIndex = Math.floor(Math.random() * userInfo.length);
   let currentUser = new User(userInfo[randomIndex]);
   welcomeUser(currentUser);
+>>>>>>> 2cfc933aac8fb81dd6e51ad5c9d0a137c8f3c39c
   return currentUser;
 };
 
@@ -104,20 +142,26 @@ function welcomeUser(user) {
   };
 };
 
-// function displayNoResults() {
-//   if (nameResults.length === 0 && tagResults.length === 0) {
-//     nameSearchResults.innerHTML = `<h1>No results found.</h1>`
-//   }
-// }
-
-function insertRecipeCards(array) {
+function insertRecipeCards(array, showSelected = false) {
   for(let i = 0; i < array.length; i++){
+    const isRecipeSelected = savedRecipes.includes(array[i]);
+    if (!isRecipeSelected || showSelected){
     cardTileDisplay.innerHTML += 
       `<section class="card" id="${array[i].id}">
+<<<<<<< HEAD
+      <h2>${array[i].name}</h2>
+      <img src="${array[i].image}" alt="image of ${array[i].name}">
+      </section>`;}
+=======
       <h2 id="${array[i].id}">${array[i].name}</h2>
       <img src="${array[i].image}" alt="image of ${array[i].name} id="${array[i].id}">
       </section>`;
+>>>>>>> 2cfc933aac8fb81dd6e51ad5c9d0a137c8f3c39c
   };
+  const allCards = document.querySelectorAll(".card");
+  allCards.forEach(card => {
+    card.addEventListener('click', saveRecipe);
+  });
 };
 
 function showSingleRecipe(event, repo, ingredients) {
