@@ -1,27 +1,29 @@
-import ingredientsData from "../data/ingredients";
-
 class Ingredient {
   constructor(data) {
     this.id = data.id;
-    this.name = data.name;
-    this.costInCents = data.estimatedCostInCents;
+    this.name;
+    this.costInCents;
   };
 
-  returnIngredientName(num) {
-    const findName = ingredientsData.find(ingredient => ingredient.id === num);
+  returnIngredientName(array, num) {
+    const findName = array.find(ingredient => ingredient.id === num);
     if (findName === undefined) {
+      console.log('error in ingred name')
       return 'Error';
     } else {
-      return findName.name;
+      this.name = findName.name;
+      return this.name;
     }
   };
 
-  returnIngredientCost(num) {
-    const findCost = ingredientsData.find(ingredient => ingredient.id === num);
+  returnIngredientCost(array, num) {
+    const findCost = array.find(ingredient => ingredient.id === num);
     if (findCost === undefined) {
+      console.log('error in ingred cost')
       return 'Error';
     } else {
-      return findCost.estimatedCostInCents;
+      this.costInCents = findCost.estimatedCostInCents
+      return this.costInCents;
     };
   };
 };
