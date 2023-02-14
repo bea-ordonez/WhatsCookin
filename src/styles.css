@@ -235,6 +235,7 @@ opacity: 0.4;
   height: 30vh;
   width: 30vw;
   background: linear-gradient(0.25turn, #5b6580, #3d4768, #1e2947);
+  padding: 5px;
   border-radius: 5px;
 }
 

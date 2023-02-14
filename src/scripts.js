@@ -1,10 +1,26 @@
 import './styles.css';
 import fetchData from './apiCalls';
 import RecipeRepository from '../src/classes/RecipeRepository';
-import Recipe from '../src/classes/Recipe';
-import Ingredient from './classes/Ingredient';
 import User from './classes/User';
 
+// Variables
+const searchBarBtn = document.querySelector('#searchBtn');
+const savedViewBtn = document.querySelector('#savedViewBtn');
+const homeViewBtn = document.querySelector('#homeViewBtn');
+const infoBtn = document.querySelector('#infoBtn');
+
+const cardTileDisplay = document.querySelector('#cardTileView');
+const singleRecipeDisplay = document.querySelector('#singleRecipeView');
+const savedRecipesDisplay = document.querySelector('#savedRecipesView');
+const creatorDisplay = document.querySelector('#creatorInfoPage');
+
+const insertUserName = document.querySelector('#userName');
+const searchBarInput = document.querySelector('#searchBar');
+const nameSearchResults = document.querySelector('#nameResultsView');
+const tagSearchResults = document.querySelector('#tagResultsView');
+const savedRecipes = [];
+
+// Promise
 Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')])
 .then(vals => {
   let userData = vals[0].usersData;
@@ -17,44 +33,24 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
   cardTileDisplay.addEventListener('click', (event) => {
     if(event.target.classList == 'open-single-recipe') {
       showSingleRecipe(event, recipeRepo, ingredientsData);
-    }
+    };
   });
 });
-
-const singleRecipeBtn = document.querySelector('.open-single-recipe')
-const searchBarBtn = document.querySelector('#searchBtn');
-const savedViewBtn = document.querySelector('#savedViewBtn');
-const homeViewBtn = document.querySelector('#homeViewBtn');
-const infoBtn = document.querySelector('#infoBtn');
-
-const cardTileDisplay = document.querySelector('#cardTileView');
-const card = document.querySelector('.card')
-const singleRecipeDisplay = document.querySelector('#singleRecipeView');
-
-const insertUserName = document.querySelector('#userName');
-const searchBarInput = document.querySelector('#searchBar');
-const nameSearchResults = document.querySelector('#nameResultsView');
-const tagSearchResults = document.querySelector('#tagResultsView');
-const savedRecipesView = document.querySelector('#savedRecipesView');
-
-const creatorDisplay = document.querySelector('#creatorInfoPage');
-
-const savedRecipes = []
 
 // Event Listeners
 homeViewBtn.addEventListener('click', () => {
   showHomeView();
 });
 
-searchBarBtn.addEventListener( 'click', function() {
-  cardTileDisplay.innerHTML = "";
+searchBarInput.addEventListener('change', () => {
+  cardTileDisplay.innerHTML = "";    
   getRecipeByTag();
   getRecipeByName();
   displayNoResults();
 });
 
-searchBarInput.addEventListener('change', () => {
-  cardTileDisplay.innerHTML = "";    
+searchBarBtn.addEventListener( 'click', function() {
+  cardTileDisplay.innerHTML = "";
   getRecipeByTag();
   getRecipeByName();
   displayNoResults();
@@ -87,22 +83,22 @@ function getRecipeByName() {
   insertRecipeCards(nameResults);
 };
 
-function saveRecipe(event, recipeRepo) {
-    //remove the event listener once the card is saved 
-    if (event.target.id) {
-        event.target.classList.add("hidden");
-        const recipeObj = recipeRepo.getRecipeById(parseInt(event.target.id));
-        const isRecipeSelected = savedRecipes.includes(recipeObj);
-        if (!isRecipeSelected) {
-            savedRecipes.push(recipeObj);
-        } else {
-            savedRecipes.splice(savedRecipes.indexOf(recipeObj), 1);
-        };
-    };
-};
+// Was unable to be resolved before end of Phase 1 but is our next step going forward.
+// function saveRecipe(event, recipeRepo) {
+//     if (event.target.id) {
+//         event.target.classList.add("hidden");
+//         const recipeObj = recipeRepo.getRecipeById(parseInt(event.target.id));
+//         const isRecipeSelected = savedRecipes.includes(recipeObj);
+//         if (!isRecipeSelected) {
+//             savedRecipes.push(recipeObj);
+//         } else {
+//             savedRecipes.splice(savedRecipes.indexOf(recipeObj), 1);
+//         };
+//     };
+// };
 
 function viewSavedRecipes() {
-    savedRecipesView.innerHTML = "";
+    savedRecipesDisplay.innerHTML = "";
     insertRecipeCards(savedRecipes, true);
 };
 
@@ -121,12 +117,6 @@ function insertRecipeCards(array, showSelected = false) {
       </section>`;
     };
   };
-  // const allCards = document.querySelectorAll(".card");
-  // allCards.forEach(card => {
-  //   card.addEventListener('click', (event) => {
-  //     saveRecipe(event, recipeRepo);
-  //   });
-  // });
 };
 
 function showSingleRecipe(event, repo, ingredients) {
@@ -181,7 +171,6 @@ function showInfo() {
   hide(cardTileDisplay);
 };
 
-// Helper Functions
 function show(element) {
   element.classList.remove('hidden');
 };
