@@ -14,9 +14,11 @@ To host the website on your local machine, run ’npm start’ in terminal and n
 
 ## Preview of App:
 
-To install project dependencies: Remember to use ‘npm install’ before trying to host the server on your local machine!
 
 
+
+
+If you encounter errors when trying to host the site with webpack: Remember to use ‘npm install’ before trying to host the server on your local machine!
 ## Context:
 This project was assigned in week 2 of module 2 for the Frontend Program, this work was completed between the 3rd and the 13th.
 
