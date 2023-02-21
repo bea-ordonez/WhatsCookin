@@ -1,5 +1,5 @@
 import { assert, expect } from 'chai';
-import Recipe from '../src/classes/recipeClass';
+import Recipe from '../src/classes/Recipe';
 import recipeTestData from '../src/data/recipeTestData';
 
 describe('Recipe', () => {

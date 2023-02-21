@@ -2,6 +2,10 @@ import './styles.css';
 import fetchData from './apiCalls';
 import RecipeRepository from '../src/classes/RecipeRepository';
 import User from './classes/User';
+import './images/Sophie.png'
+import './images/Bea.png'
+import './images/Shane.png'
+import './images/Winston.png'
 
 // Variables
 const searchBarBtn = document.querySelector('#searchBtn');

@@ -222,6 +222,11 @@ opacity: 0.4;
   border-radius: 5px;
 }
 
+.creator-info > img {
+  height: 150px;
+  width: 150px;
+}
+
 .hidden {
   display: none;
 }

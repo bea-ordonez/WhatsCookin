@@ -1,12 +1,16 @@
 import { assert, expect } from 'chai';
-import Ingredient from '../src/classes/ingredientClass'
+import Recipe from '../src/classes/Recipe';
+import recipeTestData from '../src/data/recipeTestData';
+import Ingredient from '../src/classes/Ingredient';
 import ingredientTestData from '../src/data/ingredientTestData';
 
 describe('Ingredient', () => {
-  let ingredient;
+  let ingredient, testRecipe;
 
   beforeEach(() => {
-    ingredient = new Ingredient(ingredientTestData[0]);
+    testRecipe = new Recipe(recipeTestData[0], ingredientTestData);
+    ingredient = new Ingredient(testRecipe.retrieveIngredientInfo);
+    console.log(ingredient);
   });
 
   it('should be a function', () => {
