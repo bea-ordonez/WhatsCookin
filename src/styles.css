@@ -28,15 +28,6 @@ body {
   padding-right: 16px;
 }
 
-.welcome-header > img {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 80px;
-  width: 80px;
-  margin: 10px;
-}
-
 h1 {
   position: inherit;
   width: auto;
@@ -59,9 +50,9 @@ main {
   justify-content: space-evenly;
   height: auto;
   width: auto;
-  margin-top: 12vh;
-  margin-left: 20vw;
-  margin-right: 5vh 
+  margin-top: 20vh;
+  margin-left: 5vw;
+  margin-right: 5vw; 
 }
 
 .card {
@@ -97,16 +88,11 @@ main {
 /* Navigation Bar */
 .nav-bar {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   position: fixed;
-  height: 100vh;
-  width: 17vw;
-  overflow-x: hidden;
-  margin-top: 12vh;
-  border-radius: 5px;
-  background-color: #5b6580;
+  left: 10px;
+  width: fit-content;
 }
 
 .nav-bar > label {
@@ -117,7 +103,7 @@ main {
 }
 
 .search-bar {
-  height: 20px;
+  height: 30px;
   width: 200px;
   border: 2px solid #ffc430;
   margin: 10px 0px 10px 0px;
@@ -147,7 +133,6 @@ button {
 button:hover,
 .card:hover {
   cursor: pointer;
-  /* opacity: 0.5; */
   border: 2px solid #ffc430;
 }
 
@@ -156,10 +141,7 @@ button:hover,
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 80vh;
-  width: 80vw;
   margin-top: 12vh;
-  margin-left: 20vw;
 }
 
 .single-recipe > h2, h3 {
@@ -173,6 +155,7 @@ button:hover,
   max-width: 50%;
   border-radius: 5px;
 }
+
 .ingredients,
 .instructions {
   width: 80%;
