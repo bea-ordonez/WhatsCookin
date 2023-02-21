@@ -2,6 +2,9 @@ class Ingredient {
   constructor(data) {
     this.id = data.id;
     this.name;
+    this.quantity = {
+      'amount': data.quantity.amount, 'unit': data.quantity.unit
+    }
     this.costInCents;
   };
 

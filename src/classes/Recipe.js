@@ -9,6 +9,7 @@ class Recipe {
     this.name = recipe.name;
     this.tags = recipe.tags;
     this.todosIngredients = allIngreds
+    this.totalCost;
   };
 
   retrieveIngredientInfo() {
@@ -28,8 +29,8 @@ class Recipe {
       total += (cur.costInCents * cur.quantity.amount);
       return total;
     }, 0);
-    const sum = (total / 100).toFixed(2);
-    return sum;
+    this.totalCost = (total / 100).toFixed(2);
+    return this.totalCost;
   };
 
   giveInstructionsForRecipe() {
