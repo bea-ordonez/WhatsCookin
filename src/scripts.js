@@ -17,6 +17,7 @@ const cardTileDisplay = document.querySelector('#cardTileView');
 const singleRecipeDisplay = document.querySelector('#singleRecipeView');
 const savedRecipesDisplay = document.querySelector('#savedRecipesView');
 const creatorDisplay = document.querySelector('#creatorInfoPage');
+const welcomeHeader = document.querySelector('#welcomeHeader');
 
 const insertUserName = document.querySelector('#userName');
 const searchBarInput = document.querySelector('#searchBar');
@@ -164,6 +165,7 @@ function getRandomUser(userInfo) {
 // Functions
 function showHomeView() {
   show(cardTileDisplay);
+  show(welcomeHeader);
   hide(singleRecipeDisplay);
   hide(homeViewBtn);
   hide(creatorDisplay);
@@ -173,6 +175,7 @@ function showInfo() {
   show(creatorDisplay);
   show(homeViewBtn);
   hide(cardTileDisplay);
+  hide(welcomeHeader);
 };
 
 function show(element) {
