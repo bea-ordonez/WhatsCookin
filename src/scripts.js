@@ -24,7 +24,6 @@ const searchBarInput = document.querySelector('#searchBar');
 const nameSearchResults = document.querySelector('#nameResultsView');
 const tagSearchResults = document.querySelector('#tagResultsView');
 var savedRecipes = [];
-var thisUser
 
 // Promise
 Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')])
@@ -34,7 +33,7 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
   let recipesData = vals[2].recipeData;
   let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
   insertRecipeCards(recipesData);
-  thisUser = getRandomUser(userData);
+  let thisUser = getRandomUser(userData);
   
   cardTileDisplay.addEventListener('click', (event) => {
     if(event.target.classList == 'open-single-recipe') {
@@ -75,23 +74,29 @@ savedViewBtn.addEventListener('click', () => {
 
 // Event handlers 
 function getRecipeByTag() {
-  let tagResults = [];
+  let filterResults = [];
   let userInput = searchBarInput.value;
-  tagResults = recipeRepo.filterByTag(userInput);
-  tagResults.forEach(result => {
-    tagSearchResults.innerHTML += `<section class="tagResults"><h1 class="searched-recipe" id=${result.tags}></h1></section>`
-  });
-  insertRecipeCards(tagResults);
+  Promise.all([fetchData('recipes'), fetchData('ingredients')]).then(data => {
+    let freshRepo = new RecipeRepository(data[0].recipeData, data[1].ingredientsData);
+    filterResults = freshRepo.filterByTag(userInput)
+    filterResults.forEach(result => {
+      nameSearchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
+    });
+    insertRecipeCards(filterResults);
+  })
 };
 
 function getRecipeByName() {
-  let nameResults = [];
+  let filterResults = [];
   let userInput = searchBarInput.value;
-  nameResults = recipeRepo.filterByName(userInput);
-  nameResults.forEach(result => {
-    nameSearchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
-  });
-  insertRecipeCards(nameResults);
+  Promise.all([fetchData('recipes'), fetchData('ingredients')]).then(data => {
+    let freshRepo = new RecipeRepository(data[0].recipeData, data[1].ingredientsData);
+    filterResults = freshRepo.filterByName(userInput)
+    filterResults.forEach(result => {
+      nameSearchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
+    });
+    insertRecipeCards(filterResults);
+  })
 };
 
 function viewSavedRecipes() {
