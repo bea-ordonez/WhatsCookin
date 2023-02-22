@@ -17,14 +17,15 @@ class Recipe {
       let newIng = new Ingredient(i);
       newIng.name = newIng.returnIngredientName(this.todosIngredients,i.id);
       newIng.costInCents = newIng.returnIngredientCost(this.todosIngredients, i.id);
+      // console.log(newIng)
       return newIng;
     });
     this.ingredients = currentIngredients;
+    // console.log(this.ingredients)
     return this.ingredients;
   };
 
   returnCostOfIngredients() {
-    console.log('returning cost from:', this)
     const total = this.ingredients.reduce((total, cur) => {
       total += (cur.costInCents * cur.quantity.amount);
       return total;
