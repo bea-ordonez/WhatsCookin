@@ -1,15 +1,17 @@
 class Ingredient {
   constructor(data) {
     this.id = data.id;
-    this.name;
+    // console.log( 'data', data)
     this.quantity = {
       'amount': data.quantity.amount, 'unit': data.quantity.unit
     }
+    this.name;
     this.costInCents;
   };
 
   returnIngredientName(array, num) {
-    const findName = array.find(ingredient => ingredient.id === num);
+    console.log('this is the array', array)
+    const findName = array.filter((ingredient) => ingredient.id === num)[0];
     if (findName === undefined) {
       console.log('error in ingred name')
       return 'Error';

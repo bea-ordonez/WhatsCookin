@@ -18,6 +18,7 @@ const cardTileDisplay = document.querySelector('#cardTileView');
 const singleRecipeDisplay = document.querySelector('#singleRecipeView');
 const savedRecipesDisplay = document.querySelector('#savedRecipesView');
 const creatorDisplay = document.querySelector('#creatorInfoPage');
+const welcomeHeader = document.querySelector('#welcomeHeader');
 
 const insertUserName = document.querySelector('#userName');
 const searchBarInput = document.querySelector('#searchBar');
@@ -114,6 +115,7 @@ function showSingleRecipe(event, repo, ingredients) {
   show(singleRecipeDisplay);
   show(homeViewBtn);
   hide(cardTileDisplay);
+  hide(creatorDisplay)
   let fetchedIng = ingredients;
   const element = event.target.id
   const foundRecipe = repo.findRecipe(element);
@@ -153,6 +155,7 @@ function getRandomUser(userInfo) {
 function showHomeView() {
   show(cardTileDisplay);
   show(savedViewBtn);
+  show(welcomeHeader);
   hide(singleRecipeDisplay);
   hide(homeViewBtn);
   hide(creatorDisplay);
@@ -165,6 +168,8 @@ function showInfo() {
   show(creatorDisplay);
   show(homeViewBtn);
   hide(cardTileDisplay);
+  hide(welcomeHeader);
+  hide(singleRecipeDisplay)
 };
 
 function show(element) {

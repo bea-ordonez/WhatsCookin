@@ -9,23 +9,25 @@ describe('Ingredient', () => {
 
   beforeEach(() => {
     testRecipe = new Recipe(recipeTestData[0], ingredientTestData);
-    ingredient = new Ingredient(testRecipe.retrieveIngredientInfo);
-    console.log(ingredient);
+    testRecipe.retrieveIngredientInfo();
+    ingredient = testRecipe.ingredients[0];
   });
-
+  
   it('should be a function', () => {
     assert.isFunction(Ingredient);
   });
-
+  
   it('should be able to create an instance of Ingredient', () => {
-  assert.instanceOf(ingredient, Ingredient);
+    assert.instanceOf(ingredient, Ingredient);
   });
-
+  
   it('should have an id number when created', () => {
     assert.equal(ingredient.id, 20081);
   });
-
-  it('should have a name when created', () => {
+  
+  it('should retrieve name by id', () => {
+    // console.log('line 29', testRecipe.ingredients)
+    ingredient.returnIngredientName(testRecipe.ingredients, 20081);
     assert.equal(ingredient.name, 'wheat flour');
   });
 
