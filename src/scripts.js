@@ -3,10 +3,10 @@ import fetchData from './apiCalls';
 import RecipeRepository from '../src/classes/RecipeRepository';
 import Recipe from './classes/Recipe';
 import User from './classes/User';
-import './images/Sophie.png'
-import './images/Bea.png'
-import './images/Shane.png'
-import './images/Winston.png'
+import './images/Sophie.png';
+import './images/Bea.png';
+import './images/Shane.png';
+import './images/Winston.png';
 
 // Variables
 const searchBarBtn = document.querySelector('#searchBtn');
@@ -22,7 +22,6 @@ const creatorDisplay = document.querySelector('#creatorInfoPage');
 const insertUserName = document.querySelector('#userName');
 const searchBarInput = document.querySelector('#searchBar');
 const nameSearchResults = document.querySelector('#nameResultsView');
-const tagSearchResults = document.querySelector('#tagResultsView');
 var savedRecipes = [];
 
 // Promise
@@ -54,44 +53,32 @@ homeViewBtn.addEventListener('click', () => {
 
 searchBarInput.addEventListener('change', () => {
   cardTileDisplay.innerHTML = "";    
-  getRecipeByTag();
-  getRecipeByName();
+  getRecipeBySearch();
   displayNoResults();
 });
 
 searchBarBtn.addEventListener( 'click', function() {
   cardTileDisplay.innerHTML = "";
-  getRecipeByTag();
-  getRecipeByName();
+  getRecipeBySearch();
   displayNoResults();
 });
 
 infoBtn.addEventListener('click', showInfo);
+
 savedViewBtn.addEventListener('click', () => {
     cardTileDisplay.innerHTML = "";
     viewSavedRecipes();
 });
 
 // Event handlers 
-function getRecipeByTag() {
-  let filterResults = [];
-  let userInput = searchBarInput.value;
-  Promise.all([fetchData('recipes'), fetchData('ingredients')]).then(data => {
-    let freshRepo = new RecipeRepository(data[0].recipeData, data[1].ingredientsData);
-    filterResults = freshRepo.filterByTag(userInput)
-    filterResults.forEach(result => {
-      nameSearchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
-    });
-    insertRecipeCards(filterResults);
-  })
-};
 
-function getRecipeByName() {
+function getRecipeBySearch() {
   let filterResults = [];
   let userInput = searchBarInput.value;
   Promise.all([fetchData('recipes'), fetchData('ingredients')]).then(data => {
     let freshRepo = new RecipeRepository(data[0].recipeData, data[1].ingredientsData);
-    filterResults = freshRepo.filterByName(userInput)
+    filterResults = freshRepo.filterByName(userInput).concat(freshRepo.filterByTag(userInput));
+    console.log('all valid results', filterResults);
     filterResults.forEach(result => {
       nameSearchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
     });
