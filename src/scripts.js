@@ -160,10 +160,12 @@ function getRandomUser(userInfo) {
 // Functions
 function showHomeView() {
   show(cardTileDisplay);
+  show(savedViewBtn);
   hide(singleRecipeDisplay);
   hide(homeViewBtn);
   hide(creatorDisplay);
   hide(savedRecipesDisplay);
+  cardTileDisplay.innerHTML = "";
   Promise.all([fetchData('recipes')]).then(data => insertRecipeCards(data[0].recipeData))
 };
 
