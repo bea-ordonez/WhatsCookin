@@ -23,7 +23,8 @@ const insertUserName = document.querySelector('#userName');
 const searchBarInput = document.querySelector('#searchBar');
 const nameSearchResults = document.querySelector('#nameResultsView');
 const tagSearchResults = document.querySelector('#tagResultsView');
-let savedRecipes = [];
+var savedRecipes = [];
+var thisUser
 
 // Promise
 Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')])
@@ -33,7 +34,7 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
   let recipesData = vals[2].recipeData;
   let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
   insertRecipeCards(recipesData);
-  let thisUser = getRandomUser(userData);
+  thisUser = getRandomUser(userData);
   
   cardTileDisplay.addEventListener('click', (event) => {
     if(event.target.classList == 'open-single-recipe') {
@@ -163,6 +164,7 @@ function showHomeView() {
   hide(homeViewBtn);
   hide(creatorDisplay);
   hide(savedRecipesDisplay);
+  Promise.all([fetchData('recipes')]).then(data => insertRecipeCards(data[0].recipeData))
 };
 
 function showInfo() {
