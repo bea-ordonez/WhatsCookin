@@ -128,6 +128,7 @@ function showSingleRecipe(event, repo, ingredients) {
   show(singleRecipeDisplay);
   show(homeViewBtn);
   hide(cardTileDisplay);
+  hide(creatorDisplay)
   let fetchedIng = ingredients;
   const element = event.target.id
   const foundRecipe = repo.findRecipe(element);
@@ -176,6 +177,7 @@ function showInfo() {
   show(homeViewBtn);
   hide(cardTileDisplay);
   hide(welcomeHeader);
+  hide(singleRecipeDisplay)
 };
 
 function show(element) {
