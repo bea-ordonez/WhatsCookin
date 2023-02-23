@@ -132,7 +132,7 @@ const recipeTestData = [
           "id": 9003,
           "quantity": {
             "amount": 2,
-            "unit": ""
+            "unit": "cup"
           }
         },
         {
