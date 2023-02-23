@@ -8,9 +8,9 @@ class User {
     this.recipesToCook = [];
   };
 
-  addRecipeToCook(item) {
-    this.recipesToCook.push(new Recipe(item));
-    return this.recipesToCook.recipeList;  
+  addRecipeToCook(recipe, recipesData) {
+    this.recipesToCook.push(new Recipe(recipe, recipesData));
+    return this.recipesToCook.recipeList; 
   };
 
   removeRecipeFromCook(item) {
