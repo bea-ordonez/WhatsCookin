@@ -22,7 +22,7 @@ const welcomeHeader = document.querySelector('#welcomeHeader');
 
 const insertUserName = document.querySelector('#userName');
 const searchBarInput = document.querySelector('#searchBar');
-const nameSearchResults = document.querySelector('#nameResultsView');
+const searchResults = document.querySelector('#nameResultsView');
 var savedRecipes = [];
 
 // Promise
@@ -32,7 +32,7 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
   let ingredientsData = vals[1].ingredientsData;
   let recipesData = vals[2].recipeData;
   let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
-  insertRecipeCards(recipesData);
+  insertRecipeCards(recipesData, cardTileDisplay);
   let thisUser = getRandomUser(userData);
   
   cardTileDisplay.addEventListener('click', (event) => {
@@ -64,7 +64,7 @@ searchBarBtn.addEventListener( 'click', function() {
   displayNoResults();
 });
 
-infoBtn.addEventListener('click', showInfo);
+infoBtn.addEventListener('click', showCreatorInfo);
 
 savedViewBtn.addEventListener('click', () => {
     cardTileDisplay.innerHTML = "";
@@ -81,24 +81,24 @@ function getRecipeBySearch() {
     filterResults = freshRepo.filterByName(userInput).concat(freshRepo.filterByTag(userInput));
     console.log('all valid results', filterResults);
     filterResults.forEach(result => {
-      nameSearchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
+      searchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
     });
-    insertRecipeCards(filterResults);
+    insertRecipeCards(filterResults, searchResults);
   })
 };
 
 function viewSavedRecipes() {
-  show(homeViewBtn);
-  hide(savedViewBtn);
+  show([homeViewBtn, savedRecipesDisplay]);
+  hide([savedViewBtn, creatorDisplay]);
   savedRecipesDisplay.innerHTML = "";
-  insertRecipeCards(savedRecipes, true);
+  insertRecipeCards(savedRecipes, savedRecipesDisplay, true);
 };
 
-function insertRecipeCards(array, showSelected = false) {
+function insertRecipeCards(array, element, showSelected = false) {
   for(let i = 0; i < array.length; i++){
     const isRecipeSelected = savedRecipes.includes(array[i]);
     if (!isRecipeSelected || showSelected){
-    cardTileDisplay.innerHTML += 
+    element.innerHTML += 
       `<section class="card">
       <h2>${array[i].name}</h2>
       <img src="${array[i].image}" alt="image of ${array[i].name}">
@@ -112,10 +112,8 @@ function insertRecipeCards(array, showSelected = false) {
 };
 
 function showSingleRecipe(event, repo, ingredients) {
-  show(singleRecipeDisplay);
-  show(homeViewBtn);
-  hide(cardTileDisplay);
-  hide(creatorDisplay)
+  show([singleRecipeDisplay, homeViewBtn]);
+  hide([cardTileDisplay, creatorDisplay]);
   let fetchedIng = ingredients;
   const element = event.target.id
   const foundRecipe = repo.findRecipe(element);
@@ -153,29 +151,23 @@ function getRandomUser(userInfo) {
 
 // Functions
 function showHomeView() {
-  show(cardTileDisplay);
-  show(savedViewBtn);
-  show(welcomeHeader);
-  hide(singleRecipeDisplay);
-  hide(homeViewBtn);
-  hide(creatorDisplay);
-  hide(savedRecipesDisplay);
+  show([cardTileDisplay, savedViewBtn, welcomeHeader]);
+  hide([singleRecipeDisplay, homeViewBtn,creatorDisplay, savedRecipesDisplay]);
   cardTileDisplay.innerHTML = "";
-  Promise.all([fetchData('recipes')]).then(data => insertRecipeCards(data[0].recipeData))
+  Promise.all([fetchData('recipes')]).then(data => insertRecipeCards(data[0].recipeData, cardTileDisplay))
 };
 
-function showInfo() {
-  show(creatorDisplay);
-  show(homeViewBtn);
-  hide(cardTileDisplay);
-  hide(welcomeHeader);
-  hide(singleRecipeDisplay)
+function showCreatorInfo() {
+  show([creatorDisplay, homeViewBtn]);
+  hide([cardTileDisplay, welcomeHeader, singleRecipeDisplay]);
 };
 
-function show(element) {
-  element.classList.remove('hidden');
+function show(array) {
+  const showElements = array.map(element => element.classList.remove('hidden'));
+  return showElements;
 };
   
-function hide(element) {
-  element.classList.add('hidden');
+function hide(array) {
+  const hideElements = array.map(element => element.classList.add('hidden'));
+  return hideElements;
 };
