@@ -4,17 +4,18 @@ class RecipeRepository {
   constructor(recipeData, totalIngredients) {
     this.recipeList = recipeData.map(recipe => new Recipe(recipe, totalIngredients));
     this.filteredList;
+
   };
 
   filterByTag(tag) {
     const results = this.recipeList.filter(recipe => recipe.tags.includes(tag.toLowerCase()));
-    this.filteredList += results;
+    this.filteredList = results;
     return this.filteredList;
   };
 
   filterByName(foodName) {
     const results = this.recipeList.filter(recipe => recipe.name.toLowerCase().includes(foodName.toLowerCase()));
-    this.filteredList += results;
+    this.filteredList = results;
     return this.filteredList;
   };
 

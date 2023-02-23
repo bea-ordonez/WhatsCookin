@@ -22,15 +22,15 @@ const welcomeHeader = document.querySelector('#welcomeHeader');
 
 const insertUserName = document.querySelector('#userName');
 const searchBarInput = document.querySelector('#searchBar');
-const searchResults = document.querySelector('#nameResultsView');
+const searchResultsDisplay = document.querySelector('#searchResultsView');
 var savedRecipes = [];
 
 // Promise
 Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')])
 .then(vals => {
-  let userData = vals[0].usersData;
-  let ingredientsData = vals[1].ingredientsData;
-  let recipesData = vals[2].recipeData;
+  let userData = vals[0].users;
+  let ingredientsData = vals[1].ingredients;
+  let recipesData = vals[2].recipes;
   let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
   insertRecipeCards(recipesData, cardTileDisplay);
   let thisUser = getRandomUser(userData);
@@ -53,37 +53,36 @@ homeViewBtn.addEventListener('click', () => {
 });
 
 searchBarInput.addEventListener('change', () => {
-  cardTileDisplay.innerHTML = "";    
+  // cardTileDisplay.innerHTML = "";    
   getRecipeBySearch();
-  displayNoResults();
 });
 
-searchBarBtn.addEventListener( 'click', function() {
-  cardTileDisplay.innerHTML = "";
+searchBarBtn.addEventListener('click', function() {
+  // cardTileDisplay.innerHTML = "";
   getRecipeBySearch();
-  displayNoResults();
+});
+
+savedViewBtn.addEventListener('click', () => {
+  // cardTileDisplay.innerHTML = "";
+  viewSavedRecipes();
 });
 
 infoBtn.addEventListener('click', showCreatorInfo);
-
-savedViewBtn.addEventListener('click', () => {
-    cardTileDisplay.innerHTML = "";
-    viewSavedRecipes();
-});
-
 // Event handlers 
 
 function getRecipeBySearch() {
+  show([homeViewBtn, searchResultsDisplay, savedViewBtn]);
+  hide([cardTileDisplay, singleRecipeDisplay, creatorDisplay]);
   let filterResults = [];
   let userInput = searchBarInput.value;
   Promise.all([fetchData('recipes'), fetchData('ingredients')]).then(data => {
-    let freshRepo = new RecipeRepository(data[0].recipeData, data[1].ingredientsData);
+    let freshRepo = new RecipeRepository(data[0].recipes, data[1].ingredients);
     filterResults = freshRepo.filterByName(userInput).concat(freshRepo.filterByTag(userInput));
     console.log('all valid results', filterResults);
     filterResults.forEach(result => {
-      searchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
+      searchResultsDisplay.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
     });
-    insertRecipeCards(filterResults, searchResults);
+    insertRecipeCards(filterResults, searchResultsDisplay);
   })
 };
 
