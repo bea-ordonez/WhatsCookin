@@ -24,29 +24,28 @@ describe('Ingredient', () => {
   it('should have an id number when created', () => {
     assert.equal(ingredient.id, 20081);
   });
-  
-  it('should retrieve name by id', () => {
-    // console.log('line 29', testRecipe.ingredients)
-    ingredient.returnIngredientName(testRecipe.ingredients, 20081);
-    assert.equal(ingredient.name, 'wheat flour');
-  });
 
-  it('should have an estimated cost in cents (per unit)', () => {
+  it('should have an estimated cost in cents (per unit.)', () => {
     assert.equal(ingredient.costInCents, 142);
   });
 
-  it('should return ingredients by name', () => {
-    const findName = ingredient.returnIngredientName(20081);
-    const wrongName = ingredient.returnIngredientName(2);
-    assert.equal(findName, 'wheat flour');
+  it('should return ingredients name by id', () => {
+    const findName = ingredient.returnIngredientName(testRecipe.todosIngredients, 2050);
+    assert.equal(findName, 'vanilla');
+  });
+
+  it('should not return an ingredient if the name is not found', () => {
+    const wrongName = ingredient.returnIngredientName(testRecipe.todosIngredients, 2);
     assert.equal(wrongName, 'Error');
   });
 
   it('should return an ingredients cost', () => {
-    const findCost = ingredient.returnIngredientCost(20081);
-    const wrongCost = ingredient.returnIngredientCost(3);
-  
-    assert.equal(findCost, 142);
+    const findCost = ingredient.returnIngredientCost(testRecipe.todosIngredients, 2050);
+    assert.equal(findCost, 926);
+  });
+
+  it('should not return an ingredients cost if it is not found', () => {
+    const wrongCost = ingredient.returnIngredientCost(testRecipe.todosIngredients, 3);
     assert.equal(wrongCost, 'Error');
   });
 });
