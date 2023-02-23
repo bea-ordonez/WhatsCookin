@@ -15,8 +15,8 @@ class Recipe {
   retrieveIngredientInfo() {
     const currentIngredients = this.ingredients.map(i => {
       let newIng = new Ingredient(i);
-      newIng.name = newIng.returnIngredientName(this.todosIngredients, i.id);
-      newIng.costInCents = newIng.returnIngredientCost(this.todosIngredients, i.id);
+      newIng.returnIngredientName(this.todosIngredients, i.id);
+      newIng.returnIngredientCost(this.todosIngredients, i.id);
       return newIng;
     });
     this.ingredients = currentIngredients;

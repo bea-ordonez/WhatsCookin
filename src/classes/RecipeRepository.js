@@ -7,33 +7,31 @@ class RecipeRepository {
   };
 
   filterByTag(tag) {
-    const findByTag = this.recipeList.filter(recipe => recipe.tags.includes(tag.toLowerCase()));
-    this.filteredList = findByTag;
-    return findByTag;
+    const results = this.recipeList.filter(recipe => recipe.tags.includes(tag.toLowerCase()));
+    this.filteredList += results;
+    return this.filteredList;
   };
 
   filterByName(foodName) {
-    const findByName = this.recipeList.filter(recipe => recipe.name.toLowerCase().includes(foodName.toLowerCase()));
-    this.filteredList = findByName;
-    return findByName;
+    const results = this.recipeList.filter(recipe => recipe.name.toLowerCase().includes(foodName.toLowerCase()));
+    this.filteredList += results;
+    return this.filteredList;
   };
 
   getRecipeById(id) {
-    const getId = this.recipeList.find(recipe => {
-      return recipe.id === id;
-    });
+    const getId = this.recipeList.find(recipe => recipe.id === id);
     return getId;
   };
 
   findRecipe(id) {
-    const oneRec = this.recipeList.find(recipe => {
-      let idToNum = parseInt(id)
+    const singleRecipe = this.recipeList.find(recipe => {
+      let idToNum = parseInt(id);
       if(recipe.id === idToNum){
         return recipe;
-      }
+      };
     });
-    return oneRec;
-  }
+    return singleRecipe;
+  };
 };
 
 export default RecipeRepository;
