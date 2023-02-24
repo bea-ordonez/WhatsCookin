@@ -84,11 +84,15 @@ function getRecipeBySearch() {
   Promise.all([fetchData('recipes'), fetchData('ingredients')]).then(data => {
     let freshRepo = new RecipeRepository(data[0].recipes, data[1].ingredients);
     filterResults = freshRepo.filterByName(userInput).concat(freshRepo.filterByTag(userInput));
-    console.log('all valid results', filterResults);
-    filterResults.forEach(result => {
+    let removedDupes = [];
+    filterResults.forEach(foundRecipe => {
+      removedDupes.includes(foundRecipe) ? console.log('There can be only one') : removedDupes.push(foundRecipe)
+    })
+    console.log('No Dupes', removedDupes);
+    removedDupes.forEach(result => {
       searchResultsDisplay.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
     });
-    insertRecipeCards(filterResults, searchResultsDisplay);
+    insertRecipeCards(removedDupes, searchResultsDisplay);
   })
 };
 
