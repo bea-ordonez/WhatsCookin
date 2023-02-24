@@ -44,6 +44,8 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
       let matchedById = recipesData.find((recipe) => recipe.id == event.target.id)
       thisUser.addRecipeToCook(matchedById, recipesData);
       savedRecipes = thisUser.recipesToCook;
+      // const deleteBtn = document.querySelector('.delete-recipe-btn');
+      // show([deleteBtn])
     }
   });
 });
@@ -98,6 +100,7 @@ function insertRecipeCards(array, element, showSelected = false) {
       <div class="card-buttons">
         <button class="open-single-recipe" id="${array[i].id}">View Recipe</button>
         <button class="save-recipe-btn" id="${array[i].id}">Save Recipe</button>
+        <button class="delete-recipe-btn hidden" id="${array[i].id}">Delete Recipe</button>
       </div>
       </section>`;
     };
