@@ -19,6 +19,7 @@ const singleRecipeDisplay = document.querySelector('#singleRecipeView');
 const savedRecipesDisplay = document.querySelector('#savedRecipesView');
 const creatorDisplay = document.querySelector('#creatorInfoPage');
 const welcomeHeader = document.querySelector('#welcomeHeader');
+const mainBucket = document.querySelector('main');
 
 const insertUserName = document.querySelector('#userName');
 const searchBarInput = document.querySelector('#searchBar');
@@ -35,7 +36,7 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
   insertRecipeCards(recipesData, cardTileDisplay);
   let thisUser = getRandomUser(userData);
   
-  cardTileDisplay.addEventListener('click', (event) => {
+  mainBucket.addEventListener('click', (event) => {
     if(event.target.classList == 'open-single-recipe') {
       showSingleRecipe(event, recipeRepo, ingredientsData);
     };
@@ -64,7 +65,7 @@ searchBarBtn.addEventListener('click', function() {
 
 savedViewBtn.addEventListener('click', () => {
   // cardTileDisplay.innerHTML = "";
-  viewSavedRecipes();
+  showSavedRecipes();
 });
 
 infoBtn.addEventListener('click', showCreatorInfo);
@@ -86,17 +87,10 @@ function getRecipeBySearch() {
   })
 };
 
-function viewSavedRecipes() {
-  show([homeViewBtn, savedRecipesDisplay]);
-  hide([savedViewBtn, creatorDisplay]);
-  savedRecipesDisplay.innerHTML = "";
-  insertRecipeCards(savedRecipes, savedRecipesDisplay, true);
-};
-
 function insertRecipeCards(array, element, showSelected = false) {
-  for(let i = 0; i < array.length; i++){
+  for(let i = 0; i < array.length; i++) {
     const isRecipeSelected = savedRecipes.includes(array[i]);
-    if (!isRecipeSelected || showSelected){
+    if (!isRecipeSelected || showSelected) {
     element.innerHTML += 
       `<section class="card">
       <h2>${array[i].name}</h2>
@@ -111,10 +105,10 @@ function insertRecipeCards(array, element, showSelected = false) {
 };
 
 function showSingleRecipe(event, repo, ingredients) {
-  show([singleRecipeDisplay, homeViewBtn]);
-  hide([cardTileDisplay, creatorDisplay]);
+  show([singleRecipeDisplay, homeViewBtn, savedViewBtn]);
+  hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay]);
   let fetchedIng = ingredients;
-  const element = event.target.id
+  const element = event.target.id;
   const foundRecipe = repo.findRecipe(element);
   foundRecipe.todosIngredients = fetchedIng;
   let foundIngredients = foundRecipe.retrieveIngredientInfo();
@@ -150,15 +144,22 @@ function getRandomUser(userInfo) {
 
 // Functions
 function showHomeView() {
-  show([cardTileDisplay, savedViewBtn, welcomeHeader]);
-  hide([singleRecipeDisplay, homeViewBtn,creatorDisplay, savedRecipesDisplay]);
-  cardTileDisplay.innerHTML = "";
+  show([cardTileDisplay, savedViewBtn, welcomeHeader, infoBtn]);
+  hide([singleRecipeDisplay, homeViewBtn, creatorDisplay, savedRecipesDisplay]);
+  // cardTileDisplay.innerHTML = "";
   Promise.all([fetchData('recipes')]).then(data => insertRecipeCards(data[0].recipeData, cardTileDisplay))
 };
 
+function showSavedRecipes() {
+  show([homeViewBtn, savedRecipesDisplay, infoBtn]);
+  hide([savedViewBtn, creatorDisplay, cardTileDisplay, singleRecipeDisplay]);
+  savedRecipesDisplay.innerHTML = "";
+  insertRecipeCards(savedRecipes, savedRecipesDisplay, true);
+};
+
 function showCreatorInfo() {
-  show([creatorDisplay, homeViewBtn]);
-  hide([cardTileDisplay, welcomeHeader, singleRecipeDisplay]);
+  show([creatorDisplay, homeViewBtn, savedViewBtn]);
+  hide([cardTileDisplay, welcomeHeader, singleRecipeDisplay, savedRecipesDisplay, infoBtn]);
 };
 
 function show(array) {

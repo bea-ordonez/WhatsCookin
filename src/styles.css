@@ -65,6 +65,7 @@ main {
   padding: .5em;
   border-radius: .5em;
   background: linear-gradient(0.25turn, #5b6580, #3d4768, #1e2947);
+  transition: transform 250ms ease-out;
 }
 
 .card > h2 {
@@ -80,7 +81,9 @@ main {
 }
 
 .card:hover {
-  transform: translate(0, -5px);
+  transform: scale(1.05);
+  transform-origin: center;
+  margin: 0;
   box-shadow: 7px 5px 5px #384262;
 }
   
