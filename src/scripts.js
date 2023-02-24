@@ -42,8 +42,11 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
     };
     if (event.target.classList == 'save-recipe-btn') {
       let matchedById = recipesData.find((recipe) => recipe.id == event.target.id)
-      thisUser.addRecipeToCook(matchedById, recipesData);
-      savedRecipes = thisUser.recipesToCook;
+      let checkForDupes = thisUser.recipesToCook.map(rec => rec.id)
+      if (!checkForDupes.includes(matchedById.id)) {
+        thisUser.addRecipeToCook(matchedById, recipesData);
+        savedRecipes = thisUser.recipesToCook;
+      }
       // const deleteBtn = document.querySelector('.delete-recipe-btn');
       // show([deleteBtn])
     }
