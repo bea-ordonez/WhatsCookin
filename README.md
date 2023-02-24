@@ -13,6 +13,13 @@ Install dependencies by using ‘npm install’ in your terminal within the pare
 
 To host the website on your local machine, run ’npm start’ in terminal and navigate to ‘http://localhost:8080/' in your browser.
 
+## Testing Instructions:
+[//]: <>
+To run the test suite associated with the classes behind the scenes and how they interact: 
+
+Run 'npm test' from the terminal while within the main directory of the application.
+
+
 ## Preview of App:
 [//]: <>
 ![WhatsCookinAppPreview](https://user-images.githubusercontent.com/117314181/218613699-a993f009-7a9e-433b-8dba-76b8f2aa0f11.png)
