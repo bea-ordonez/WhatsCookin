@@ -7,46 +7,45 @@
   </head>
   <body>
     <div class="welcome-header">
-      <h1>Welcome <span id="userName"></span> what IS for dinner?</h1>
+      <h1 id="welcomeHeader">Welcome <span id="userName"></span>
+         what IS for dinner?</h1>
       <div class="util-btns">
         <button id="infoBtn">Info Page</button>
+        <button class="saved-view-btn" id="savedViewBtn">Saved Recipes</button>
+        <button class="home-view-btn hidden" id="homeViewBtn">Go Home</button>
       </div>
+      <nav class="nav-bar">
+        <input class="search-bar" id="searchBar" type="search" placeholder="Search ...">
+        <button class="search-btn" id="searchBtn">Search</button>
+      </nav>
     </div>
-    <nav class="nav-bar">
-      <label for="searchBar">Search Box</label>
-      <input class="search-bar" id="searchBar" type="search" placeholder="Search ...">
-      <button class="search-btn" id="searchBtn">Search</button>
-      <button class="saved-view-btn" id="savedViewBtn">Saved Recipes</button>
-      <button class="home-view-btn hidden" id="homeViewBtn">Go Home</button>
-    </nav>
     <main>
       <section class="card-tiles" id="cardTileView"></section>
-      <section id="nameResultsView"></section>
-      <section id="tagResultsView"></section>
-      <section id="savedRecipesView"></section>
-      <section class="hidden" id="singleRecipeView"></section>
+      <section class="card-tiles hidden" id="searchResultsView"></section>
+      <section class="card-tiles hidden" id="savedRecipesView"></section>
+      <section class="card-tiles hidden" id="singleRecipeView"></section>
       <section class="creator-info-page hidden" id="creatorInfoPage">
         <div class="creator-info" id="sophie">
           <h2>Sophie L.</h2>
-          <img src="src/images/Sophie.png" alt="woman smiling with a hat and sunglasses next to a dog">
+          <img src="./images/Sophie.png" alt="woman smiling with a hat and sunglasses next to a dog">
           <a href="https://github.com/sophielabelle">GitHub</a>
           <p>I love to snowboard, ride motorcycles, and snowboard. If I am not doing any of this you can catch me eating.</p>
         </div>
         <div class="creator-info" id="shane">
           <h2>Shane M.</h2>
-          <img src="src/images/Shane.png" alt="man smiling with glasses and long dark hair">
+          <img src="./images/Shane.png" alt="man smiling with glasses and long dark hair">
           <a href="https://github.com/sdmisra">GitHub</a>
           <p>I am a big fan of drumming and watching Lord of the Rings (AGAIN). I am passionate about a lot, but my fav food is deep dish pizza!</p>
         </div>
         <div class="creator-info" id="winston">
           <h2>Winston C.</h2>
-          <img src="./src/images/Winston.png" alt="picture of a blonde man with glasses, big headphones and headband">
+          <img src="./images/Winston.png" alt="picture of a blonde man with glasses, big headphones and headband">
           <a href="https://github.com/WinstonCalhoun">GitHub</a>
           <p>I love to cook and play video games. I would love to one day code and create cooking video games.</p>
         </div>
         <div class="creator-info" id="bea">
           <h2>Bea O.</h2>
-          <img src="./src/images/Bea.png" alt="woman similing with dark hair smiling in front of a brick wall">
+          <img src="./images/Bea.png" alt="woman similing with dark hair smiling in front of a brick wall">
           <a href="https://github.com/bea-ordonez">GitHub</a>
           <p>On a Saturday night you can catch me watching Saturday Night Live! I also really love volley ball and eating Pho!</p>
         </div>

@@ -1,7 +1,12 @@
 import './styles.css';
 import fetchData from './apiCalls';
 import RecipeRepository from '../src/classes/RecipeRepository';
+import Recipe from './classes/Recipe';
 import User from './classes/User';
+import './images/Sophie.png';
+import './images/Bea.png';
+import './images/Shane.png';
+import './images/Winston.png';
 
 // Variables
 const searchBarBtn = document.querySelector('#searchBtn');
@@ -13,29 +18,48 @@ const cardTileDisplay = document.querySelector('#cardTileView');
 const singleRecipeDisplay = document.querySelector('#singleRecipeView');
 const savedRecipesDisplay = document.querySelector('#savedRecipesView');
 const creatorDisplay = document.querySelector('#creatorInfoPage');
+const welcomeHeader = document.querySelector('#welcomeHeader');
+const mainBucket = document.querySelector('main');
 
 const insertUserName = document.querySelector('#userName');
 const searchBarInput = document.querySelector('#searchBar');
-const nameSearchResults = document.querySelector('#nameResultsView');
-const tagSearchResults = document.querySelector('#tagResultsView');
-const savedRecipes = [];
+const searchResultsDisplay = document.querySelector('#searchResultsView');
+var savedRecipes = [];
 
 // Promise
 Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')])
 .then(vals => {
-  let userData = vals[0].usersData;
-  let ingredientsData = vals[1].ingredientsData;
-  let recipesData = vals[2].recipeData;
+  let userData = vals[0].users;
+  let ingredientsData = vals[1].ingredients;
+  let recipesData = vals[2].recipes;
   let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
-  insertRecipeCards(recipesData);
-  getRandomUser(userData);
+  insertRecipeCards(recipesData, cardTileDisplay);
+  let thisUser = getRandomUser(userData);
   
-  cardTileDisplay.addEventListener('click', (event) => {
+  mainBucket.addEventListener('click', (event) => {
     if(event.target.classList == 'open-single-recipe') {
       showSingleRecipe(event, recipeRepo, ingredientsData);
     };
+    if (event.target.classList == 'save-recipe-btn') {
+      saveRecipe(event, recipesData, thisUser)
+    };
   });
 });
+
+function saveRecipe(event, array, user) {
+  let matchedById = array.find((recipe) => recipe.id == event.target.id);
+  let checkForDupes = user.recipesToCook.map(rec => rec.id);
+  if (!checkForDupes.includes(matchedById.id)) {
+    user.addRecipeToCook(matchedById, array);
+    savedRecipes = user.recipesToCook;
+  };
+};
+
+function deleteRecipe(event, array) {
+  const recipeObj = event.target.parentNode
+  array.splice(recipeObj, 1)
+};
+
 
 // Event Listeners
 homeViewBtn.addEventListener('click', () => {
@@ -43,88 +67,64 @@ homeViewBtn.addEventListener('click', () => {
 });
 
 searchBarInput.addEventListener('change', () => {
-  cardTileDisplay.innerHTML = "";    
-  getRecipeByTag();
-  getRecipeByName();
-  displayNoResults();
+  // cardTileDisplay.innerHTML = "";    
+  getRecipeBySearch();
 });
 
-searchBarBtn.addEventListener( 'click', function() {
-  cardTileDisplay.innerHTML = "";
-  getRecipeByTag();
-  getRecipeByName();
-  displayNoResults();
+searchBarBtn.addEventListener('click', function() {
+  // cardTileDisplay.innerHTML = "";
+  getRecipeBySearch();
 });
 
-infoBtn.addEventListener('click', showInfo);
 savedViewBtn.addEventListener('click', () => {
-    cardTileDisplay.innerHTML = "";
-    viewSavedRecipes();
+  // cardTileDisplay.innerHTML = "";
+  showSavedRecipes();
 });
 
+infoBtn.addEventListener('click', showCreatorInfo);
 // Event handlers 
-function getRecipeByTag() {
-  let tagResults = [];
+
+function getRecipeBySearch() {
+  show([homeViewBtn, searchResultsDisplay, savedViewBtn]);
+  hide([cardTileDisplay, singleRecipeDisplay, creatorDisplay]);
+  let filterResults = [];
   let userInput = searchBarInput.value;
-  tagResults = recipeRepo.filterByTag(userInput);
-  tagResults.forEach(result => {
-    tagSearchResults.innerHTML += `<section class="tagResults"><h1 class="searched-recipe" id=${result.tags}></h1></section>`
-  });
-  insertRecipeCards(tagResults);
+  Promise.all([fetchData('recipes'), fetchData('ingredients')]).then(data => {
+    let freshRepo = new RecipeRepository(data[0].recipes, data[1].ingredients);
+    filterResults = freshRepo.filterByName(userInput).concat(freshRepo.filterByTag(userInput));
+    let removedDupes = [];
+    filterResults.forEach(foundRecipe => {
+      removedDupes.includes(foundRecipe) ? console.log('There can be only one') : removedDupes.push(foundRecipe)
+    })
+    console.log('No Dupes', removedDupes);
+    removedDupes.forEach(result => {
+      searchResultsDisplay.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
+    });
+    insertRecipeCards(removedDupes, searchResultsDisplay);
+  })
 };
 
-function getRecipeByName() {
-  let nameResults = [];
-  let userInput = searchBarInput.value;
-  nameResults = recipeRepo.filterByName(userInput);
-  nameResults.forEach(result => {
-    nameSearchResults.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
-  });
-  insertRecipeCards(nameResults);
-};
-
-// Was unable to be resolved before end of Phase 1 but is our next step going forward.
-// function saveRecipe(event, recipeRepo) {
-//     if (event.target.id) {
-//         event.target.classList.add("hidden");
-//         const recipeObj = recipeRepo.getRecipeById(parseInt(event.target.id));
-//         const isRecipeSelected = savedRecipes.includes(recipeObj);
-//         if (!isRecipeSelected) {
-//             savedRecipes.push(recipeObj);
-//         } else {
-//             savedRecipes.splice(savedRecipes.indexOf(recipeObj), 1);
-//         };
-//     };
-// };
-
-function viewSavedRecipes() {
-    savedRecipesDisplay.innerHTML = "";
-    insertRecipeCards(savedRecipes, true);
-};
-
-function insertRecipeCards(array, showSelected = false) {
-  for(let i = 0; i < array.length; i++){
-    const isRecipeSelected = savedRecipes.includes(array[i]);
-    if (!isRecipeSelected || showSelected){
-    cardTileDisplay.innerHTML += 
+function insertRecipeCards(array, element) {
+  console.log(array)
+  for(let i = 0; i < array.length; i++) {
+    element.innerHTML += 
       `<section class="card">
       <h2>${array[i].name}</h2>
       <img src="${array[i].image}" alt="image of ${array[i].name}">
       <div class="card-buttons">
         <button class="open-single-recipe" id="${array[i].id}">View Recipe</button>
-        <button class="save-recipe-btn" id="saveRecipeBtn" >Save Recipe</>
-      </div>  
+        <button class="save-recipe-btn" id="${array[i].id}">Save Recipe</button>
+        <button class="delete-recipe-btn hidden" id="${array[i].id}">Delete Recipe</button>
+      </div>
       </section>`;
-    };
   };
 };
 
 function showSingleRecipe(event, repo, ingredients) {
-  show(singleRecipeDisplay);
-  show(homeViewBtn);
-  hide(cardTileDisplay);
+  show([singleRecipeDisplay, homeViewBtn, savedViewBtn]);
+  hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay]);
   let fetchedIng = ingredients;
-  const element = event.target.id
+  const element = event.target.id;
   const foundRecipe = repo.findRecipe(element);
   foundRecipe.todosIngredients = fetchedIng;
   let foundIngredients = foundRecipe.retrieveIngredientInfo();
@@ -155,26 +155,35 @@ function getRandomUser(userInfo) {
   let randomIndex = Math.floor(Math.random() * userInfo.length);
   let currentUser = new User(userInfo[randomIndex]);
   insertUserName.innerHTML = `${currentUser.name}`;
+  return currentUser
 };
 
 // Functions
 function showHomeView() {
-  show(cardTileDisplay);
-  hide(singleRecipeDisplay);
-  hide(homeViewBtn);
-  hide(creatorDisplay);
+  show([cardTileDisplay, savedViewBtn, welcomeHeader, infoBtn]);
+  hide([singleRecipeDisplay, homeViewBtn, creatorDisplay, savedRecipesDisplay]);
+  // cardTileDisplay.innerHTML = "";
+  Promise.all([fetchData('recipes')]).then(data => insertRecipeCards(data[0].recipeData, cardTileDisplay))
 };
 
-function showInfo() {
-  show(creatorDisplay);
-  show(homeViewBtn);
-  hide(cardTileDisplay);
+function showSavedRecipes() {
+  show([homeViewBtn, savedRecipesDisplay, infoBtn]);
+  hide([savedViewBtn, creatorDisplay, cardTileDisplay, singleRecipeDisplay]);
+  savedRecipesDisplay.innerHTML = "";
+  insertRecipeCards(savedRecipes, savedRecipesDisplay);
 };
 
-function show(element) {
-  element.classList.remove('hidden');
+function showCreatorInfo() {
+  show([creatorDisplay, homeViewBtn, savedViewBtn]);
+  hide([cardTileDisplay, welcomeHeader, singleRecipeDisplay, savedRecipesDisplay, infoBtn]);
+};
+
+function show(array) {
+  const showElements = array.map(element => element.classList.remove('hidden'));
+  return showElements;
 };
   
-function hide(element) {
-  element.classList.add('hidden');
+function hide(array) {
+  const hideElements = array.map(element => element.classList.add('hidden'));
+  return hideElements;
 };
