@@ -10,12 +10,12 @@ class User {
 
   addRecipeToCook(recipe, recipesData) {
     this.recipesToCook.push(new Recipe(recipe, recipesData));
-    return this.recipesToCook.recipeList; 
+    return this.recipesToCook; 
   };
 
   removeRecipeFromCook(item) {
     this.recipesToCook.splice(item, 1);
-    return this.recipesToCook.recipeList;
+    return this.recipesToCook;
   };
 
   findByTag(tag) {

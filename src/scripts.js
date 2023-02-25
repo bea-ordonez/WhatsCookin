@@ -41,14 +41,28 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
       showSingleRecipe(event, recipeRepo, ingredientsData);
     };
     if (event.target.classList == 'save-recipe-btn') {
-      let matchedById = recipesData.find((recipe) => recipe.id == event.target.id)
-      thisUser.addRecipeToCook(matchedById, recipesData);
-      savedRecipes = thisUser.recipesToCook;
-      // const deleteBtn = document.querySelector('.delete-recipe-btn');
-      // show([deleteBtn])
+      saveRecipe(event, recipesData, thisUser)
     }
   });
+  savedRecipesDisplay.addEventListener('click', (event) => {
+    if(event.target.classList.contains('delete-recipe-btn')) {
+      deleteRecipe(event)
+    }
+  })
 });
+
+function saveRecipe(event, array, user) {
+let matchedById = array.find((recipe) => recipe.id == event.target.id)
+user.addRecipeToCook(matchedById, array);
+savedRecipes = user.recipesToCook;
+}
+
+function deleteRecipe(event, array) {
+  const recipeObj = event.target.parentNode
+  array.splice(recipeObj, 1)
+
+}
+
 
 // Event Listeners
 homeViewBtn.addEventListener('click', () => {
