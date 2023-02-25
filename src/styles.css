@@ -94,6 +94,7 @@ main {
   justify-content: flex-start;
   position: fixed;
   left: 10px;
+  top: 10px;
   width: fit-content;
 }
 
@@ -147,23 +148,32 @@ button:hover,
 }
 
 .single-recipe > h2, h3 {
-  color: white;
-  text-shadow: 2px 2px black;
-  margin-top: 2em;
+  color: rgb(0, 0, 0);
+  text-shadow: 2px 2px rgb(255, 255, 255);
 }
 
-.single-recipe > img {
-  max-height: 50%;
+.single-styling {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.single-styling > img {
   max-width: 50%;
   border-radius: 5px;
 }
-
 .ingredients,
 .instructions {
-  width: 80%;
+  text-align: center;
   padding: 10px;
+  background-color: #ffc43026;
   border: 2px solid #ffc430;
   border-radius: 5px;
+  margin: 5px;
+}
+
+.instructions {
+  width: 80%;
 }
 
 /* Star Rating */
