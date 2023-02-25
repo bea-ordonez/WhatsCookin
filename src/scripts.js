@@ -42,34 +42,23 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
     };
     if (event.target.classList == 'save-recipe-btn') {
       saveRecipe(event, recipesData, thisUser)
-      let matchedById = recipesData.find((recipe) => recipe.id == event.target.id)
-      let checkForDupes = thisUser.recipesToCook.map(rec => rec.id)
-      if (!checkForDupes.includes(matchedById.id)) {
-        thisUser.addRecipeToCook(matchedById, recipesData);
-        savedRecipes = thisUser.recipesToCook;
-      }
-      // const deleteBtn = document.querySelector('.delete-recipe-btn');
-      // show([deleteBtn])
-    }
+    };
   });
-  savedRecipesDisplay.addEventListener('click', (event) => {
-    if(event.target.classList.contains('delete-recipe-btn')) {
-      deleteRecipe(event)
-    }
-  })
 });
 
 function saveRecipe(event, array, user) {
-let matchedById = array.find((recipe) => recipe.id == event.target.id)
-user.addRecipeToCook(matchedById, array);
-savedRecipes = user.recipesToCook;
-}
+  let matchedById = array.find((recipe) => recipe.id == event.target.id);
+  let checkForDupes = user.recipesToCook.map(rec => rec.id);
+  if (!checkForDupes.includes(matchedById.id)) {
+    user.addRecipeToCook(matchedById, array);
+    savedRecipes = user.recipesToCook;
+  };
+};
 
 function deleteRecipe(event, array) {
   const recipeObj = event.target.parentNode
   array.splice(recipeObj, 1)
-
-}
+};
 
 
 // Event Listeners
@@ -115,10 +104,9 @@ function getRecipeBySearch() {
   })
 };
 
-function insertRecipeCards(array, element, showSelected = false) {
+function insertRecipeCards(array, element) {
+  console.log(array)
   for(let i = 0; i < array.length; i++) {
-    const isRecipeSelected = savedRecipes.includes(array[i]);
-    if (!isRecipeSelected || showSelected) {
     element.innerHTML += 
       `<section class="card">
       <h2>${array[i].name}</h2>
@@ -129,7 +117,6 @@ function insertRecipeCards(array, element, showSelected = false) {
         <button class="delete-recipe-btn hidden" id="${array[i].id}">Delete Recipe</button>
       </div>
       </section>`;
-    };
   };
 };
 
@@ -183,7 +170,7 @@ function showSavedRecipes() {
   show([homeViewBtn, savedRecipesDisplay, infoBtn]);
   hide([savedViewBtn, creatorDisplay, cardTileDisplay, singleRecipeDisplay]);
   savedRecipesDisplay.innerHTML = "";
-  insertRecipeCards(savedRecipes, savedRecipesDisplay, true);
+  insertRecipeCards(savedRecipes, savedRecipesDisplay);
 };
 
 function showCreatorInfo() {
