@@ -29,6 +29,7 @@ var savedRecipes = [];
 // Promise
 Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')])
 .then(vals => {
+  console.log(vals)
   let userData = vals[0].users;
   let ingredientsData = vals[1].ingredients;
   let recipesData = vals[2].recipes;
@@ -122,17 +123,23 @@ function insertRecipeCards(array, element) {
 
 function showSingleRecipe(event, repo, ingredients) {
   show([singleRecipeDisplay, homeViewBtn, savedViewBtn]);
-  hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay]);
+  hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, welcomeHeader]);
   let fetchedIng = ingredients;
   const element = event.target.id;
   const foundRecipe = repo.findRecipe(element);
   foundRecipe.todosIngredients = fetchedIng;
   let foundIngredients = foundRecipe.retrieveIngredientInfo();
   let foundInstructions = foundRecipe.giveInstructionsForRecipe();
+  const mappedInstructs = foundInstructions.map(inst => inst)
   singleRecipeDisplay.innerHTML = 
   `<section class="single-recipe" id="${foundRecipe.id}">
   <h2>${foundRecipe.name}</h2>
-  <img src="${foundRecipe.image}" alt="image of ${foundRecipe.name}">
+  <div class="single-styling">
+    <img src="${foundRecipe.image}" alt="image of ${foundRecipe.name}">
+    <div class="ingredients">
+    <h3>Ingredients</h3>
+    </div>
+  </div>
   <div class="rating">
     <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
     <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
@@ -140,29 +147,30 @@ function showSingleRecipe(event, repo, ingredients) {
     <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
     <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
   </div>
-  <h3>Ingredients</h3>
-  <div class="ingredients">
-    <p>${foundIngredients.map((ing) => ` ${ing.name} `)}</p>
-  </div>
-  <h3>Instructions</h3>
   <div class="instructions">
-    <p>${foundInstructions.map((inst) =>` ${inst} `)}</p>
+  <h3>Instructions</h3>
   </div>
   </section>`
+  const i = document.querySelector('.ingredients')
+  const instruc = document.querySelector('.instructions')
+  foundIngredients.reduce((acc, cur) => {
+    acc.push(`${cur.quantity.amount} ${cur.quantity.unit} of ${cur.name}`)
+    return acc;
+  }, []).map(ing => i.innerHTML += `<p>${ing}</p>`);
+  foundInstructions.map(potat => instruc.innerHTML += `<p>${potat}</p>`);
 };
 
 function getRandomUser(userInfo) {
   let randomIndex = Math.floor(Math.random() * userInfo.length);
   let currentUser = new User(userInfo[randomIndex]);
   insertUserName.innerHTML = `${currentUser.name}`;
-  return currentUser
+  return currentUser;
 };
 
 // Functions
 function showHomeView() {
   show([cardTileDisplay, savedViewBtn, welcomeHeader, infoBtn]);
   hide([singleRecipeDisplay, homeViewBtn, creatorDisplay, savedRecipesDisplay]);
-  // cardTileDisplay.innerHTML = "";
   Promise.all([fetchData('recipes')]).then(data => insertRecipeCards(data[0].recipeData, cardTileDisplay))
 };
 
