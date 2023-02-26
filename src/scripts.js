@@ -50,7 +50,7 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes'),
       saveRecipe(event, recipesData, thisUser)
       // console.log(thisUser.recipesToCook);
       // POST function goes here I think? - SM
-      console.log('User ID:', thisUser.recipesToCook, 'Event ID:', event.target.id)
+      console.log('User Recipes:', thisUser.recipesToCook, 'Event ID:', event.target.id)
       let objectToPost = 
       {
           'userID':thisUser.id,
@@ -234,6 +234,6 @@ const postSavedRecipes = (recipesObject) => {
     }
     return response.json()
   })
-  .then(json => console.log(json.message))
+  .then(json => console.log(json))
   .catch(error => console.log('Caught error:', error))
 }
