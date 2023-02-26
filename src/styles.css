@@ -13,6 +13,12 @@ body {
   margin: 0;
 }
 
+main {
+  display: flex;
+  height: 80vh;
+  width: 100vw;
+}
+
 .welcome-header {
   display: flex;
   flex-direction: column;
@@ -31,14 +37,59 @@ h1 {
   position: inherit;
   width: auto;
   color: white;
-  font-size: 40px;
+  font-size: 2em;
   text-shadow: 4px 2px black;
 }
 
-main {
+/* Navigation Bar */
+.nav-bar {
   display: flex;
-  height: 80vh;
-  width: 100vw;
+  align-items: flex-start;
+  position: fixed;
+  flex-direction: column;
+  left: 5px;
+  top: 0px;
+  width: fit-content;
+}
+
+.search-bar {
+  height: 30px;
+  width: 200px;
+  border: 2px solid #ffc430;
+  margin: 10px 0px 10px 0px;
+}
+
+.radio-dial-pricing {
+  color: white;
+  text-shadow: 1px 2px black;
+}
+
+.search-bar:hover {
+  border: 2px solid blue;
+}
+
+.util-btns {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+button {
+  background-color:#1e2947;
+  height: 35px;
+  width: 110px;
+  border-radius: 18px;
+  margin: 5px;
+  color: white;
+}
+
+button:hover,
+.card:hover,
+.raido-dials:hover {
+  cursor: pointer;
+  border: 2px solid #ffc430;
 }
 
 /* Recipie Card Section */
@@ -86,58 +137,6 @@ main {
   margin: 0;
   box-shadow: 7px 5px 5px #384262;
 }
-  
-/* Navigation Bar */
-.nav-bar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  position: fixed;
-  left: 10px;
-  top: 10px;
-  width: fit-content;
-}
-
-.nav-bar > label {
-  margin-top: 18px;
-  text-shadow: 2px 2px black;
-  font-size: large;
-  color: white;
-}
-
-.search-bar {
-  height: 30px;
-  width: 200px;
-  border: 2px solid #ffc430;
-  margin: 10px 0px 10px 0px;
-}
-
-.search-bar:hover {
-  border: 2px solid blue;
-}
-
-.util-btns {
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0;
-  right: 0;
-}
-
-button {
-  background-color:#1e2947;
-  height: 35px;
-  width: 110px;
-  border-radius: 18px;
-  margin: 5px;
-  color: white;
-}
-
-button:hover,
-.card:hover {
-  cursor: pointer;
-  border: 2px solid #ffc430;
-}
 
 /* Single Recipe View */
 .single-recipe {
@@ -162,6 +161,7 @@ button:hover,
   max-width: 50%;
   border-radius: 5px;
 }
+
 .ingredients,
 .instructions {
   text-align: center;
