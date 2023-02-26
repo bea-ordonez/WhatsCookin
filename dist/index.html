@@ -9,21 +9,38 @@
     <div class="welcome-header">
       <h1 id="welcomeHeader">Welcome <span id="userName"></span>
          what IS for dinner?</h1>
+      <nav class="nav-bar">
+        <div>
+          <input class="search-bar" id="searchBar" type="search" placeholder="Search ...">
+          <button class="search-btn" id="searchBtn">Search</button>
+        </div>
+        <div class="radio-dial-pricing" id="radioBtns">
+          <p>Filter Recipes by Price:</p>
+          <input class="radio-dials" type="radio" id="low" name="filter-price" value="Low">
+          <label for="low">$0 - $50</label>
+          <input class="radio-dials" type="radio" id="lowMid" name="filter-price" value="Low to Mid">
+          <label for="lowMid">$51 - $100</label>
+          <input class="radio-dials" type="radio" id="mid" name="filter-price" value="Mid">
+          <label for="mid">$101 - $150</label>
+          <input class="radio-dials" type="radio" id="midHigh" name="filter-price" value="Mid to High">
+          <label for="midHigh">$151 - $200</label>
+          <input class="radio-dials" type="radio" id="high" name="filter-price" value="High">
+          <label for="high">$201+</label>
+          <button id="radioSlectorBtn">Show Selected</button>
+        </div>
+      </nav>
       <div class="util-btns">
         <button id="infoBtn">Info Page</button>
         <button class="saved-view-btn" id="savedViewBtn">Saved Recipes</button>
         <button class="home-view-btn hidden" id="homeViewBtn">Go Home</button>
       </div>
-      <nav class="nav-bar">
-        <input class="search-bar" id="searchBar" type="search" placeholder="Search ...">
-        <button class="search-btn" id="searchBtn">Search</button>
-      </nav>
     </div>
     <main>
       <section class="card-tiles" id="cardTileView"></section>
       <section class="card-tiles hidden" id="searchResultsView"></section>
       <section class="card-tiles hidden" id="savedRecipesView"></section>
       <section class="hidden" id="singleRecipeView"></section>
+      <section class="card-tiles hidden" id="costFilteredView"></section>
       <section class="creator-info-page hidden" id="creatorInfoPage">
         <div class="creator-info" id="sophie">
           <h2>Sophie L.</h2>
