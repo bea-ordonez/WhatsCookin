@@ -28,10 +28,10 @@ const searchBarInput = document.querySelector('#searchBar');
 const searchResultsDisplay = document.querySelector('#searchResultsView');
 
 // Variables
-const savedRecipes = [];
+let savedRecipes = [];
 
 // Promise
-Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')])
+Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes'), fetchData('usersRecipes')])
 .then(vals => {
   let userData = vals[0].users;
   let ingredientsData = vals[1].ingredients;
@@ -39,6 +39,7 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
   let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
   insertRecipeCards(recipesData, cardTileDisplay);
   let thisUser = getRandomUser(userData);
+  console.log(thisUser);
   const recipeCostObj = recipeRepo.sortRecipesByCost();
 
   mainBucket.addEventListener('click', (event) => {
@@ -47,6 +48,15 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
     };
     if (event.target.classList == 'save-recipe-btn') {
       saveRecipe(event, recipesData, thisUser)
+      // console.log(thisUser.recipesToCook);
+      // POST function goes here I think? - SM
+      console.log('User ID:', thisUser.recipesToCook, 'Event ID:', event.target.id)
+      let objectToPost = 
+      {
+          'userID':thisUser.id,
+          'recipeID': event.target.id
+      }
+      postSavedRecipes(objectToPost);
     };
   });
   const priceSelect = document.querySelector('#radioSlectorBtn')
@@ -206,3 +216,24 @@ function hide(array) {
   const hideElements = array.map(element => element.classList.add('hidden'));
   return hideElements;
 };
+
+// This doesn't belong here but I want to see if it works and I can't quite figure out how to export two functions from apiCalls.js
+
+const postSavedRecipes = (recipesObject) => {
+  fetch('http://localhost:3001/api/v1/usersRecipes', {
+    method: 'POST',
+    body: JSON.stringify(recipesObject),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      console.log(response.json());
+      throw new Error(response.message);
+    }
+    return response.json()
+  })
+  .then(json => console.log(json.message))
+  .catch(error => console.log('Caught error:', error))
+}
