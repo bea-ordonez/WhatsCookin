@@ -50,7 +50,7 @@ class RecipeRepository {
       } else if(cost > 201) {
         acc.high.push(recipe);
       };
-      return acc
+      return acc;
     }, {low: [], lowMid: [], mid: [], midHigh: [], high: []});
     this.sortRecipesByCost = getPrice;
     return this.sortRecipesByCost;

@@ -68,13 +68,6 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
   });
 });
 
-function selectedPriceDisplay(array) {
-  costFilterDisplay.innerHTML = ""
-  show([costFilterDisplay])
-  hide([cardTileDisplay])
-  insertRecipeCards(array, costFilterDisplay)
-}
-
 // Event Listeners
 homeViewBtn.addEventListener('click', showHomeView);
 searchBarInput.addEventListener('change', getRecipeBySearch);
@@ -114,8 +107,15 @@ function getRecipeBySearch() {
       searchResultsDisplay.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
     });
     insertRecipeCards(removedDupes, searchResultsDisplay);
-  })
+  });
 };
+
+function selectedPriceDisplay(array) {
+  costFilterDisplay.innerHTML = ""
+  show([costFilterDisplay, homeViewBtn]);
+  hide([cardTileDisplay]);
+  insertRecipeCards(array, costFilterDisplay);
+}
 
 function insertRecipeCards(array, element) {
   for(let i = 0; i < array.length; i++) {
