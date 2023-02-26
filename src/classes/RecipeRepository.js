@@ -4,7 +4,7 @@ class RecipeRepository {
   constructor(recipeData, totalIngredients) {
     this.recipeList = recipeData.map(recipe => new Recipe(recipe, totalIngredients));
     this.filteredList;
-
+    this.sortedByPrice;
   };
 
   filterByTag(tag) {
@@ -32,6 +32,28 @@ class RecipeRepository {
       };
     });
     return singleRecipe;
+  };
+
+  sortRecipesByCost() {
+    this.recipeList.map(recipe => recipe.retrieveIngredientInfo())
+    let getPrice = this.recipeList.reduce((acc, recipe) => {
+      let cost = recipe.totalCostOfIngredients();
+      const between = (min, max) => cost >= min && cost <= max;
+      if(between(0, 50)) {
+        acc.low.push(recipe);
+      } else if(between(51, 100)) {
+        acc.lowMid.push(recipe);
+      } else if(between(101, 150)) {
+        acc.mid.push(recipe);
+      } else if(between(151, 200)) {
+        acc.midHigh.push(recipe);
+      } else if(cost > 201) {
+        acc.high.push(recipe);
+      };
+      return acc
+    }, {low: [], lowMid: [], mid: [], midHigh: [], high: []});
+    this.sortRecipesByCost = getPrice;
+    return this.sortRecipesByCost;
   };
 };
 

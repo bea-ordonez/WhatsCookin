@@ -8,35 +8,39 @@ import './images/Bea.png';
 import './images/Shane.png';
 import './images/Winston.png';
 
-// Variables
+// Query Selectors
 const searchBarBtn = document.querySelector('#searchBtn');
 const savedViewBtn = document.querySelector('#savedViewBtn');
 const homeViewBtn = document.querySelector('#homeViewBtn');
 const infoBtn = document.querySelector('#infoBtn');
+const radioBtnSection = document.querySelector('#radioBtns');
 
 const cardTileDisplay = document.querySelector('#cardTileView');
 const singleRecipeDisplay = document.querySelector('#singleRecipeView');
 const savedRecipesDisplay = document.querySelector('#savedRecipesView');
+const costFilterDisplay = document.querySelector('#costFilteredView')
 const creatorDisplay = document.querySelector('#creatorInfoPage');
-const welcomeHeader = document.querySelector('#welcomeHeader');
 const mainBucket = document.querySelector('main');
+const welcomeHeader = document.querySelector('#welcomeHeader');
 
-const insertUserName = document.querySelector('#userName');
+const userName = document.querySelector('#userName');
 const searchBarInput = document.querySelector('#searchBar');
 const searchResultsDisplay = document.querySelector('#searchResultsView');
-var savedRecipes = [];
+
+// Variables
+const savedRecipes = [];
 
 // Promise
 Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')])
 .then(vals => {
-  console.log(vals)
   let userData = vals[0].users;
   let ingredientsData = vals[1].ingredients;
   let recipesData = vals[2].recipes;
   let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
   insertRecipeCards(recipesData, cardTileDisplay);
   let thisUser = getRandomUser(userData);
-  
+  const recipeCostObj = recipeRepo.sortRecipesByCost();
+
   mainBucket.addEventListener('click', (event) => {
     if(event.target.classList == 'open-single-recipe') {
       showSingleRecipe(event, recipeRepo, ingredientsData);
@@ -45,8 +49,40 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
       saveRecipe(event, recipesData, thisUser)
     };
   });
+  const priceSelect = document.querySelector('#radioSlectorBtn')
+  const radioBtns = document.querySelectorAll('.radio-dials');
+  priceSelect.addEventListener('click', () => {
+    for(const radioBtn of radioBtns) {
+      if(radioBtn.checked && radioBtn.id === 'low') {
+        selectedPriceDisplay(recipeCostObj.low);
+      } else if(radioBtn.checked && radioBtn.id === 'lowMid') {
+        selectedPriceDisplay(recipeCostObj.lowMid);
+      } else if(radioBtn.checked && radioBtn.id === 'mid') {
+        selectedPriceDisplay(recipeCostObj.mid);
+      } else if(radioBtn.checked && radioBtn.id === 'midHigh') {
+        selectedPriceDisplay(recipeCostObj.midHigh);
+      } else if(radioBtn.checked && radioBtn.id === 'high') {
+        selectedPriceDisplay(recipeCostObj.high);
+      }
+    }
+  });
 });
 
+function selectedPriceDisplay(array) {
+  costFilterDisplay.innerHTML = ""
+  show([costFilterDisplay])
+  hide([cardTileDisplay])
+  insertRecipeCards(array, costFilterDisplay)
+}
+
+// Event Listeners
+homeViewBtn.addEventListener('click', showHomeView);
+searchBarInput.addEventListener('change', getRecipeBySearch);
+searchBarBtn.addEventListener('click', getRecipeBySearch);
+savedViewBtn.addEventListener('click', showSavedRecipes);
+infoBtn.addEventListener('click', showCreatorInfo);
+
+// Event handlers 
 function saveRecipe(event, array, user) {
   let matchedById = array.find((recipe) => recipe.id == event.target.id);
   let checkForDupes = user.recipesToCook.map(rec => rec.id);
@@ -62,29 +98,6 @@ function deleteRecipe(event, array) {
 };
 
 
-// Event Listeners
-homeViewBtn.addEventListener('click', () => {
-  showHomeView();
-});
-
-searchBarInput.addEventListener('change', () => {
-  // cardTileDisplay.innerHTML = "";    
-  getRecipeBySearch();
-});
-
-searchBarBtn.addEventListener('click', function() {
-  // cardTileDisplay.innerHTML = "";
-  getRecipeBySearch();
-});
-
-savedViewBtn.addEventListener('click', () => {
-  // cardTileDisplay.innerHTML = "";
-  showSavedRecipes();
-});
-
-infoBtn.addEventListener('click', showCreatorInfo);
-// Event handlers 
-
 function getRecipeBySearch() {
   show([homeViewBtn, searchResultsDisplay, savedViewBtn]);
   hide([cardTileDisplay, singleRecipeDisplay, creatorDisplay]);
@@ -97,7 +110,6 @@ function getRecipeBySearch() {
     filterResults.forEach(foundRecipe => {
       removedDupes.includes(foundRecipe) ? console.log('There can be only one') : removedDupes.push(foundRecipe)
     })
-    console.log('No Dupes', removedDupes);
     removedDupes.forEach(result => {
       searchResultsDisplay.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
     });
@@ -106,7 +118,6 @@ function getRecipeBySearch() {
 };
 
 function insertRecipeCards(array, element) {
-  console.log(array)
   for(let i = 0; i < array.length; i++) {
     element.innerHTML += 
       `<section class="card">
@@ -163,7 +174,7 @@ function showSingleRecipe(event, repo, ingredients) {
 function getRandomUser(userInfo) {
   let randomIndex = Math.floor(Math.random() * userInfo.length);
   let currentUser = new User(userInfo[randomIndex]);
-  insertUserName.innerHTML = `${currentUser.name}`;
+  userName.innerHTML = `${currentUser.name}`;
   return currentUser;
 };
 
