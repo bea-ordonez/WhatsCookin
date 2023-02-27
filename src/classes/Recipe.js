@@ -10,7 +10,7 @@ class Recipe {
     this.tags = recipe.tags;
     this.todosIngredients = allIngreds;
     this.totalCost;
-  };
+  }
 
   retrieveIngredientInfo() {
     const currentIngredients = this.ingredients.map(i => {
@@ -21,7 +21,7 @@ class Recipe {
     });
     this.ingredients = currentIngredients;
     return this.ingredients;
-  };
+  }
 
   totalCostOfIngredients() {
     const total = this.ingredients.reduce((total, cur) => {
@@ -30,7 +30,7 @@ class Recipe {
     }, 0);
     this.totalCost = (total / 100).toFixed(2);
     return this.totalCost;
-  };
+  }
 
   giveInstructionsForRecipe() {
     const steps = this.instructions.map(instruction => {
@@ -38,7 +38,7 @@ class Recipe {
     });
     this.instructions = steps;
     return this.instructions;
-  };
-};
+  }
+}
 
 export default Recipe;
