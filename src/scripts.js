@@ -134,9 +134,9 @@ function insertRecipeCards(array, element) {
       <h2>${array[i].name}</h2>
       <img src="${array[i].image}" alt="image of ${array[i].name}">
       <div class="card-buttons">
-        <button class="open-single-recipe" id="${array[i].id}">View Recipe</button>
-        <button class="save-recipe-btn" id="${array[i].id}">Save Recipe</button>
-        <button class="delete-recipe-btn hidden" id="${array[i].id}">Delete Recipe</button>
+        <button class="open-single-recipe" id="singleRecipe${array[i].id}">View Recipe</button>
+        <button class="save-recipe-btn" id="save${array[i].id}">Save Recipe</button>
+        <button class="delete-recipe-btn hidden" id="delete${array[i].id}">Delete Recipe</button>
       </div>
       </section>`;
   };
