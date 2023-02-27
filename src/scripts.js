@@ -1,19 +1,19 @@
 import './styles.css';
-import fetchData from './apiCalls';
-import RecipeRepository from '../src/classes/RecipeRepository';
-import Recipe from './classes/Recipe';
-import User from './classes/User';
 import './images/Sophie.png';
 import './images/Bea.png';
 import './images/Shane.png';
 import './images/Winston.png';
+import fetchData from './apiCalls';
+import RecipeRepository from '../src/classes/RecipeRepository';
+import User from './classes/User';
 
 // Query Selectors
 const searchBarBtn = document.querySelector('#searchBtn');
 const savedViewBtn = document.querySelector('#savedViewBtn');
 const homeViewBtn = document.querySelector('#homeViewBtn');
 const infoBtn = document.querySelector('#infoBtn');
-const radioBtnSection = document.querySelector('#radioBtns');
+const priceSelect = document.querySelector('#radioSlectorBtn');
+const radioBtns = document.querySelectorAll('.radio-dials');
 
 const cardTileDisplay = document.querySelector('#cardTileView');
 const singleRecipeDisplay = document.querySelector('#singleRecipeView');
@@ -28,47 +28,51 @@ const searchBarInput = document.querySelector('#searchBar');
 const searchResultsDisplay = document.querySelector('#searchResultsView');
 
 // Variables
-const savedRecipes = [];
+let savedRecipes = [];
+let userData, ingredientsData, recipesData, recipeRepo, recipeCostObj, thisUser;
 
 // Promise
 Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')])
-.then(vals => {
-  let userData = vals[0].users;
-  let ingredientsData = vals[1].ingredients;
-  let recipesData = vals[2].recipes;
-  let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
-  insertRecipeCards(recipesData, cardTileDisplay);
-  let thisUser = getRandomUser(userData);
-  const recipeCostObj = recipeRepo.sortRecipesByCost();
-
-  mainBucket.addEventListener('click', (event) => {
-    if(event.target.classList == 'open-single-recipe') {
-      showSingleRecipe(event, recipeRepo, ingredientsData);
-    };
-    if (event.target.classList == 'save-recipe-btn') {
-      saveRecipe(event, recipesData, thisUser)
-    };
-  });
-  const priceSelect = document.querySelector('#radioSlectorBtn')
-  const radioBtns = document.querySelectorAll('.radio-dials');
-  priceSelect.addEventListener('click', () => {
-    for(const radioBtn of radioBtns) {
-      if(radioBtn.checked && radioBtn.id === 'low') {
-        selectedPriceDisplay(recipeCostObj.low);
-      } else if(radioBtn.checked && radioBtn.id === 'lowMid') {
-        selectedPriceDisplay(recipeCostObj.lowMid);
-      } else if(radioBtn.checked && radioBtn.id === 'mid') {
-        selectedPriceDisplay(recipeCostObj.mid);
-      } else if(radioBtn.checked && radioBtn.id === 'midHigh') {
-        selectedPriceDisplay(recipeCostObj.midHigh);
-      } else if(radioBtn.checked && radioBtn.id === 'high') {
-        selectedPriceDisplay(recipeCostObj.high);
-      }
-    }
-  });
+  .then(vals => {
+    userData = vals[0].users;
+    ingredientsData = vals[1].ingredients;
+    recipesData = vals[2].recipes;
+    recipeRepo = new RecipeRepository(recipesData, ingredientsData);
+    thisUser = userData[0];
+    recipeCostObj = recipeRepo.sortRecipesByCost();
+    insertRecipeCards(recipesData, cardTileDisplay)
 });
 
+
 // Event Listeners
+mainBucket.addEventListener('click', (event) => {
+  if(event.target.classList == 'open-single-recipe') {
+    showSingleRecipe(event, recipeRepo, ingredientsData);
+  };
+  if (event.target.classList == 'save-recipe-btn') {
+    saveRecipe(event, recipesData, thisUser);
+    const objectToPost = {'userID': thisUser.id, 'recipeID': event.target.id};
+    postSavedRecipes(objectToPost);
+  }
+});
+
+priceSelect.addEventListener('click', () => {
+  for(const radioBtn of radioBtns) {
+    const c = radioBtn.checked;
+    if(c && radioBtn.id === 'low') {
+      selectedPriceDisplay(recipeCostObj.low);
+    } else if(c && radioBtn.id === 'lowMid') {
+      selectedPriceDisplay(recipeCostObj.lowMid);
+    } else if(c && radioBtn.id === 'mid') {
+      selectedPriceDisplay(recipeCostObj.mid);
+    } else if(c && radioBtn.id === 'midHigh') {
+      selectedPriceDisplay(recipeCostObj.midHigh);
+    } else if(c && radioBtn.id === 'high') {
+      selectedPriceDisplay(recipeCostObj.high);
+    }
+  }
+});
+
 homeViewBtn.addEventListener('click', showHomeView);
 searchBarInput.addEventListener('change', getRecipeBySearch);
 searchBarBtn.addEventListener('click', getRecipeBySearch);
@@ -82,18 +86,12 @@ function saveRecipe(event, array, user) {
   if (!checkForDupes.includes(matchedById.id)) {
     user.addRecipeToCook(matchedById, array);
     savedRecipes = user.recipesToCook;
-  };
-};
-
-function deleteRecipe(event, array) {
-  const recipeObj = event.target.parentNode
-  array.splice(recipeObj, 1)
-};
-
+  }
+}
 
 function getRecipeBySearch() {
   show([homeViewBtn, searchResultsDisplay, savedViewBtn]);
-  hide([cardTileDisplay, singleRecipeDisplay, creatorDisplay]);
+  hide([cardTileDisplay, singleRecipeDisplay, creatorDisplay, costFilterDisplay]);
   let filterResults = [];
   let userInput = searchBarInput.value;
   Promise.all([fetchData('recipes'), fetchData('ingredients')]).then(data => {
@@ -102,19 +100,12 @@ function getRecipeBySearch() {
     let removedDupes = [];
     filterResults.forEach(foundRecipe => {
       removedDupes.includes(foundRecipe) ? console.log('There can be only one') : removedDupes.push(foundRecipe)
-    })
+    });
     removedDupes.forEach(result => {
       searchResultsDisplay.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
     });
     insertRecipeCards(removedDupes, searchResultsDisplay);
-  });
-};
-
-function selectedPriceDisplay(array) {
-  costFilterDisplay.innerHTML = ""
-  show([costFilterDisplay, homeViewBtn]);
-  hide([cardTileDisplay]);
-  insertRecipeCards(array, costFilterDisplay);
+  })
 }
 
 function insertRecipeCards(array, element) {
@@ -129,26 +120,25 @@ function insertRecipeCards(array, element) {
         <button class="delete-recipe-btn hidden" id="${array[i].id}">Delete Recipe</button>
       </div>
       </section>`;
-  };
-};
+  }
+}
 
 function showSingleRecipe(event, repo, ingredients) {
   show([singleRecipeDisplay, homeViewBtn, savedViewBtn]);
-  hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, welcomeHeader]);
+  hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, welcomeHeader, costFilterDisplay]);
   let fetchedIng = ingredients;
   const element = event.target.id;
   const foundRecipe = repo.findRecipe(element);
   foundRecipe.todosIngredients = fetchedIng;
   let foundIngredients = foundRecipe.retrieveIngredientInfo();
   let foundInstructions = foundRecipe.giveInstructionsForRecipe();
-  const mappedInstructs = foundInstructions.map(inst => inst)
   singleRecipeDisplay.innerHTML = 
   `<section class="single-recipe" id="${foundRecipe.id}">
   <h2>${foundRecipe.name}</h2>
   <div class="single-styling">
     <img src="${foundRecipe.image}" alt="image of ${foundRecipe.name}">
     <div class="ingredients">
-    <h3>Ingredients</h3>
+      <h3>Ingredients</h3>
     </div>
   </div>
   <div class="rating">
@@ -159,50 +149,71 @@ function showSingleRecipe(event, repo, ingredients) {
     <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
   </div>
   <div class="instructions">
-  <h3>Instructions</h3>
+    <h3>Instructions</h3>
   </div>
   </section>`
   const i = document.querySelector('.ingredients')
   const instruc = document.querySelector('.instructions')
   foundIngredients.reduce((acc, cur) => {
-    acc.push(`${cur.quantity.amount} ${cur.quantity.unit} of ${cur.name}`)
+    acc.push(`${cur.quantity.amount} ${cur.quantity.unit} of ${cur.name}`);
     return acc;
   }, []).map(ing => i.innerHTML += `<p>${ing}</p>`);
   foundInstructions.map(potat => instruc.innerHTML += `<p>${potat}</p>`);
-};
-
-function getRandomUser(userInfo) {
-  let randomIndex = Math.floor(Math.random() * userInfo.length);
-  let currentUser = new User(userInfo[randomIndex]);
-  userName.innerHTML = `${currentUser.name}`;
-  return currentUser;
-};
+}
 
 // Functions
+function selectedPriceDisplay(array) {
+  costFilterDisplay.innerHTML = "";
+  show([costFilterDisplay, homeViewBtn]);
+  hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, singleRecipeDisplay]);
+  insertRecipeCards(array, costFilterDisplay);
+}
+
 function showHomeView() {
   show([cardTileDisplay, savedViewBtn, welcomeHeader, infoBtn]);
-  hide([singleRecipeDisplay, homeViewBtn, creatorDisplay, savedRecipesDisplay]);
-  Promise.all([fetchData('recipes')]).then(data => insertRecipeCards(data[0].recipeData, cardTileDisplay))
-};
+  hide([singleRecipeDisplay, homeViewBtn, creatorDisplay, savedRecipesDisplay, costFilterDisplay]);
+  insertRecipeCards(recipesData, cardTileDisplay)
+}
 
 function showSavedRecipes() {
   show([homeViewBtn, savedRecipesDisplay, infoBtn]);
-  hide([savedViewBtn, creatorDisplay, cardTileDisplay, singleRecipeDisplay]);
+  hide([savedViewBtn, creatorDisplay, cardTileDisplay, singleRecipeDisplay, costFilterDisplay]);
   savedRecipesDisplay.innerHTML = "";
   insertRecipeCards(savedRecipes, savedRecipesDisplay);
-};
+}
 
 function showCreatorInfo() {
   show([creatorDisplay, homeViewBtn, savedViewBtn]);
   hide([cardTileDisplay, welcomeHeader, singleRecipeDisplay, savedRecipesDisplay, infoBtn]);
-};
+}
 
-function show(array) {
+function show(array){
   const showElements = array.map(element => element.classList.remove('hidden'));
   return showElements;
-};
+}
   
 function hide(array) {
   const hideElements = array.map(element => element.classList.add('hidden'));
   return hideElements;
-};
+}
+
+// This doesn't belong here but I want to see if it works and I can't quite figure out how to export two functions from apiCalls.js
+
+function postSavedRecipes(recipesObject) {
+  fetch('http://localhost:3001/api/v1/usersRecipes', {
+    method: 'POST',
+    body: JSON.stringify(recipesObject),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      console.log(response.json());
+      throw new Error(response.message);
+    }
+    return response.json()
+  })
+  .then(json => console.log(json))
+  .catch(error => console.log('Caught error:', error))
+}
