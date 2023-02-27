@@ -28,7 +28,7 @@ const searchBarInput = document.querySelector('#searchBar');
 const searchResultsDisplay = document.querySelector('#searchResultsView');
 
 // Variables
-const savedRecipes = [];
+let thisUser;
 
 // Promise
 Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')])
@@ -38,7 +38,10 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
   let recipesData = vals[2].recipes;
   let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
   insertRecipeCards(recipesData, cardTileDisplay);
-  let thisUser = getRandomUser(userData);
+  thisUser = new User(userData[0]);
+  thisUser.recipesToCook = thisUser.recipesToCook.map(recipeID => recipeRepo.findRecipe(recipeID));
+  console.log(thisUser);
+  userName.innerHTML = `${thisUser.name}`;
   const recipeCostObj = recipeRepo.sortRecipesByCost();
 
   mainBucket.addEventListener('click', (event) => {
@@ -47,6 +50,15 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
     };
     if (event.target.classList == 'save-recipe-btn') {
       saveRecipe(event, recipesData, thisUser)
+      // console.log(thisUser.recipesToCook);
+      // POST function goes here I think? - SM
+      console.log('User Recipes:', thisUser.recipesToCook, 'Event ID:', event.target.id)
+      let objectToPost = 
+      {
+          'userID':thisUser.id,
+          'recipeID': event.target.id
+      }
+      postSavedRecipes(objectToPost);
     };
   });
   const priceSelect = document.querySelector('#radioSlectorBtn')
@@ -77,16 +89,16 @@ infoBtn.addEventListener('click', showCreatorInfo);
 
 // Event handlers 
 function saveRecipe(event, array, user) {
-  let matchedById = array.find((recipe) => recipe.id == event.target.id);
+  let saveEvent = event.target.id.split('save')[1];
+  let matchedById = array.find((recipe) => recipe.id == saveEvent);
   let checkForDupes = user.recipesToCook.map(rec => rec.id);
   if (!checkForDupes.includes(matchedById.id)) {
     user.addRecipeToCook(matchedById, array);
-    savedRecipes = user.recipesToCook;
   };
 };
 
 function deleteRecipe(event, array) {
-  const recipeObj = event.target.parentNode
+  const recipeObj = event.target.parentNode.split('delete')[1];
   array.splice(recipeObj, 1)
 };
 
@@ -136,7 +148,7 @@ function showSingleRecipe(event, repo, ingredients) {
   show([singleRecipeDisplay, homeViewBtn, savedViewBtn]);
   hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, welcomeHeader]);
   let fetchedIng = ingredients;
-  const element = event.target.id;
+  const element = event.target.id.split('singleRecipe')[1];
   const foundRecipe = repo.findRecipe(element);
   foundRecipe.todosIngredients = fetchedIng;
   let foundIngredients = foundRecipe.retrieveIngredientInfo();
@@ -171,12 +183,12 @@ function showSingleRecipe(event, repo, ingredients) {
   foundInstructions.map(potat => instruc.innerHTML += `<p>${potat}</p>`);
 };
 
-function getRandomUser(userInfo) {
-  let randomIndex = Math.floor(Math.random() * userInfo.length);
-  let currentUser = new User(userInfo[randomIndex]);
-  userName.innerHTML = `${currentUser.name}`;
-  return currentUser;
-};
+// function getRandomUser(userInfo) {
+//   let randomIndex = Math.floor(Math.random() * userInfo.length);
+//   let currentUser = new User(userInfo[randomIndex]);
+//   userName.innerHTML = `${currentUser.name}`;
+//   return currentUser;
+// };
 
 // Functions
 function showHomeView() {
@@ -189,7 +201,7 @@ function showSavedRecipes() {
   show([homeViewBtn, savedRecipesDisplay, infoBtn]);
   hide([savedViewBtn, creatorDisplay, cardTileDisplay, singleRecipeDisplay]);
   savedRecipesDisplay.innerHTML = "";
-  insertRecipeCards(savedRecipes, savedRecipesDisplay);
+  insertRecipeCards(thisUser.recipesToCook, savedRecipesDisplay);
 };
 
 function showCreatorInfo() {
@@ -206,3 +218,26 @@ function hide(array) {
   const hideElements = array.map(element => element.classList.add('hidden'));
   return hideElements;
 };
+
+// This doesn't belong here but I want to see if it works and I can't quite figure out how to export two functions from apiCalls.js
+
+const postSavedRecipes = (recipesObject) => {
+  recipesObject.recipeID = recipesObject.recipeID.split('save')[1];
+  console.log(recipesObject);
+  fetch('http://localhost:3001/api/v1/usersRecipes', {
+    method: 'POST',
+    body: JSON.stringify(recipesObject),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      console.log(response.json());
+      throw new Error(response.message);
+    }
+    return response.json()
+  })
+  .then(json => console.log(json))
+  .catch(error => console.log('Caught error:', error))
+}

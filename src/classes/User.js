@@ -5,7 +5,7 @@ class User {
     this.name = userInfo.name;
     this.id = userInfo.id;
     this.pantryItems = userInfo.pantry;
-    this.recipesToCook = [];
+    this.recipesToCook = userInfo.recipesToCook || [];
   };
 
   addRecipeToCook(recipe, recipesData) {
