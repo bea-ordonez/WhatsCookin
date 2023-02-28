@@ -9,7 +9,7 @@ This project represents a site that allows users to peruse a list of 50 deliciou
 [//]: <>
 1. You will need two distinct directories - one for the front end and one to emulate the back end / server:
 
-1. Clone down the frontend repo found at: https://github.com/bea-ordonez/WhatsCookin
+1. Clone down the frontend repo found at: https://github.com/bea-ordonez/WhatsCookin /
 Clone down the backend repo found at: https://github.com/turingschool-examples/whats-cookin-api
 
 1. Install dependencies by using ‘npm install’ in your terminal within each directory. It is helpful in your terminal to create a second tab (with command + t on macs) in which to run the backend server.
