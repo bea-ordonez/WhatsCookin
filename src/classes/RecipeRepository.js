@@ -4,7 +4,6 @@ class RecipeRepository {
   constructor(recipeData, totalIngredients) {
     this.recipeList = recipeData.map(recipe => new Recipe(recipe, totalIngredients));
     this.filteredList;
-    this.sortedByPrice;
   }
 
   filterByTag(tag) {
@@ -52,8 +51,7 @@ class RecipeRepository {
       }
       return acc;
     }, {low: [], lowMid: [], mid: [], midHigh: [], high: []});
-    this.sortRecipesByCost = getPrice;
-    return this.sortRecipesByCost;
+    return getPrice;
   }
 }
 
