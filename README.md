@@ -7,17 +7,24 @@ This project represents a site that allows users to peruse a list of 50 deliciou
 
 ## Installation Instructions:
 [//]: <>
-Clone down the repo found at: https://github.com/bea-ordonez/WhatsCookin
+1. You will need two distinct directories - one for the front end and one to emulate the back end / server:
 
-Install dependencies by using ‘npm install’ in your terminal within the parent directory.
+1. Clone down the frontend repo found at: https://github.com/bea-ordonez/WhatsCookin
+Clone down the backend repo found at: https://github.com/turingschool-examples/whats-cookin-api
 
-To host the website on your local machine, run ’npm start’ in terminal and navigate to ‘http://localhost:8080/' in your browser.
+1. Install dependencies by using ‘npm install’ in your terminal within each directory. It is helpful in your terminal to create a second tab (with command + t on macs) in which to run the backend server.
+
+1. To start backend server, within its directory run 'npm start'.
+
+1. To host the front-end website on your local machine, run ’npm start’ in terminal.
+
+1. Navigate to ‘http://localhost:8080/' in your browser.
 
 ## Testing Instructions:
 [//]: <>
-To run the test suite associated with the classes behind the scenes and how they interact: 
 
-Run 'npm test' from the terminal while within the main directory of the application.
+To run the test suite associated with the classes behind the scenes and how they interact: 
+Run 'npm test' from the terminal while within the main directory of the application (Whats Cookin).
 
 
 ## Preview of App:
@@ -48,4 +55,3 @@ This project was assigned in week 2 of module 2 for the Frontend Program, this w
 
 ## Future Feature Ideas:
 [//]: <>
-Enable User to save recipes that they like, then view saved recipes to filter yet further.
