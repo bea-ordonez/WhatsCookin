@@ -43,6 +43,17 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
     insertRecipeCards(recipesData, cardTileDisplay)
 });
 
+.then(vals => {
+  let userData = vals[0].users;
+  let ingredientsData = vals[1].ingredients;
+  let recipesData = vals[2].recipes;
+  let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
+  insertRecipeCards(recipesData, cardTileDisplay);
+  thisUser = new User(userData[0]);
+  thisUser.recipesToCook = thisUser.recipesToCook.map(recipeID => recipeRepo.findRecipe(recipeID));
+  console.log(thisUser);
+  userName.innerHTML = `${thisUser.name}`;
+  const recipeCostObj = recipeRepo.sortRecipesByCost();
 
 // Event Listeners
 mainBucket.addEventListener('click', (event) => {
@@ -51,6 +62,15 @@ mainBucket.addEventListener('click', (event) => {
   };
   if (event.target.classList == 'save-recipe-btn') {
     saveRecipe(event, recipesData, thisUser);
+      // console.log(thisUser.recipesToCook);
+      // POST function goes here I think? - SM
+      console.log('User Recipes:', thisUser.recipesToCook, 'Event ID:', event.target.id)
+      let objectToPost = 
+      {
+          'userID':thisUser.id,
+          'recipeID': event.target.id
+      }
+      postSavedRecipes(objectToPost);
     const objectToPost = {'userID': thisUser.id, 'recipeID': event.target.id};
     postSavedRecipes(objectToPost);
   }
@@ -81,13 +101,19 @@ infoBtn.addEventListener('click', showCreatorInfo);
 
 // Event handlers 
 function saveRecipe(event, array, user) {
-  let matchedById = array.find((recipe) => recipe.id == event.target.id);
+  let saveEvent = event.target.id.split('save')[1];
+  let matchedById = array.find((recipe) => recipe.id == saveEvent);
   let checkForDupes = user.recipesToCook.map(rec => rec.id);
   if (!checkForDupes.includes(matchedById.id)) {
     user.addRecipeToCook(matchedById, array);
-    savedRecipes = user.recipesToCook;
-  }
-}
+  };
+};
+
+function deleteRecipe(event, array) {
+  const recipeObj = event.target.parentNode.split('delete')[1];
+  array.splice(recipeObj, 1)
+};
+
 
 function getRecipeBySearch() {
   show([homeViewBtn, searchResultsDisplay, savedViewBtn]);
@@ -115,9 +141,9 @@ function insertRecipeCards(array, element) {
       <h2>${array[i].name}</h2>
       <img src="${array[i].image}" alt="image of ${array[i].name}">
       <div class="card-buttons">
-        <button class="open-single-recipe" id="${array[i].id}">View Recipe</button>
-        <button class="save-recipe-btn" id="${array[i].id}">Save Recipe</button>
-        <button class="delete-recipe-btn hidden" id="${array[i].id}">Delete Recipe</button>
+        <button class="open-single-recipe" id="singleRecipe${array[i].id}">View Recipe</button>
+        <button class="save-recipe-btn" id="save${array[i].id}">Save Recipe</button>
+        <button class="delete-recipe-btn hidden" id="delete${array[i].id}">Delete Recipe</button>
       </div>
       </section>`;
   }
@@ -127,7 +153,7 @@ function showSingleRecipe(event, repo, ingredients) {
   show([singleRecipeDisplay, homeViewBtn, savedViewBtn]);
   hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, welcomeHeader, costFilterDisplay]);
   let fetchedIng = ingredients;
-  const element = event.target.id;
+  const element = event.target.id.split('singleRecipe')[1];
   const foundRecipe = repo.findRecipe(element);
   foundRecipe.todosIngredients = fetchedIng;
   let foundIngredients = foundRecipe.retrieveIngredientInfo();
@@ -161,6 +187,7 @@ function showSingleRecipe(event, repo, ingredients) {
   foundInstructions.map(potat => instruc.innerHTML += `<p>${potat}</p>`);
 }
 
+
 // Functions
 function selectedPriceDisplay(array) {
   costFilterDisplay.innerHTML = "";
@@ -179,8 +206,8 @@ function showSavedRecipes() {
   show([homeViewBtn, savedRecipesDisplay, infoBtn]);
   hide([savedViewBtn, creatorDisplay, cardTileDisplay, singleRecipeDisplay, costFilterDisplay]);
   savedRecipesDisplay.innerHTML = "";
-  insertRecipeCards(savedRecipes, savedRecipesDisplay);
-}
+  insertRecipeCards(thisUser.recipesToCook, savedRecipesDisplay);
+};
 
 function showCreatorInfo() {
   show([creatorDisplay, homeViewBtn, savedViewBtn]);
@@ -195,11 +222,13 @@ function show(array){
 function hide(array) {
   const hideElements = array.map(element => element.classList.add('hidden'));
   return hideElements;
-}
+};
 
 // This doesn't belong here but I want to see if it works and I can't quite figure out how to export two functions from apiCalls.js
 
-function postSavedRecipes(recipesObject) {
+const postSavedRecipes = (recipesObject) => {
+  recipesObject.recipeID = recipesObject.recipeID.split('save')[1];
+  console.log(recipesObject);
   fetch('http://localhost:3001/api/v1/usersRecipes', {
     method: 'POST',
     body: JSON.stringify(recipesObject),
