@@ -7,7 +7,7 @@ This project represents a site that allows users to peruse a list of 50 deliciou
 
 ## Installation Instructions:
 [//]: <>
-1. You will need two distinct directories - one for the front end and one to emulate the back end / server:
+1. You will need two *separate* directories - one for the front end and one to emulate the back end / server:
 
 1. Clone down the frontend repo found at: https://github.com/bea-ordonez/WhatsCookin \
 Clone down the backend repo found at: https://github.com/turingschool-examples/whats-cookin-api
