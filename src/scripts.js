@@ -133,7 +133,7 @@ function insertRecipeCards(array, element) {
 
 function showSingleRecipe(event, repo, ingredients) {
   show([singleRecipeDisplay, homeViewBtn, savedViewBtn]);
-  hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, welcomeHeader, costFilterDisplay]);
+  hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, welcomeHeader, searchResultsDisplay, costFilterDisplay]);
   let fetchedIng = ingredients;
   let element = event.target.id.split('singleRecipe')[1];
   console.log(element)
@@ -141,6 +141,7 @@ function showSingleRecipe(event, repo, ingredients) {
   foundRecipe.todosIngredients = fetchedIng;
   let foundIngredients = foundRecipe.retrieveIngredientInfo();
   let foundInstructions = foundRecipe.giveInstructionsForRecipe();
+  singleRecipeDisplay.innerHTML = ""
   singleRecipeDisplay.innerHTML = 
   `<section class="single-recipe" id="${foundRecipe.id}">
   <h2>${foundRecipe.name}</h2>
@@ -176,13 +177,13 @@ function showSingleRecipe(event, repo, ingredients) {
 function selectedPriceDisplay(array) {
   costFilterDisplay.innerHTML = "";
   show([costFilterDisplay, homeViewBtn, infoBtn]);
-  hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, singleRecipeDisplay]);
+  hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, singleRecipeDisplay, searchResultsDisplay]);
   insertRecipeCards(array, costFilterDisplay);
 }
 
 function showHomeView() {
   show([cardTileDisplay, savedViewBtn, welcomeHeader, infoBtn]);
-  hide([singleRecipeDisplay, homeViewBtn, creatorDisplay, savedRecipesDisplay, costFilterDisplay]);
+  hide([singleRecipeDisplay, homeViewBtn, creatorDisplay, savedRecipesDisplay, costFilterDisplay, searchResultsDisplay]);
   insertRecipeCards(recipesData, cardTileDisplay);
 }
 
