@@ -35,7 +35,7 @@ If you encounter errors when trying to host the site with webpack: Remember to u
 
 ## Context:
 [//]: <>
-This project was assigned in week 2 of module 2 for the Frontend Program, this work was completed between the 3rd and the 13th.
+This project was assigned in module 2 for the Frontend Program, this work was completed between the 3rd and the 28th of February.
 
 ## Contributors:
 [//]: <>
