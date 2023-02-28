@@ -36,8 +36,7 @@ class Recipe {
     let steps = this.instructions.map(instruction => {
       return `Step ${instruction.number}: ${instruction.instruction}`
     });
-    this.instructions = steps;
-    return this.instructions;
+    return steps;
   }
 }
 
