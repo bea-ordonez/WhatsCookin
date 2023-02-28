@@ -33,7 +33,7 @@ class Recipe {
   }
 
   giveInstructionsForRecipe() {
-    const steps = this.instructions.map(instruction => {
+    let steps = this.instructions.map(instruction => {
       return `Step ${instruction.number}: ${instruction.instruction}`
     });
     this.instructions = steps;

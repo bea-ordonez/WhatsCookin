@@ -18,7 +18,7 @@ const radioBtns = document.querySelectorAll('.radio-dials');
 const cardTileDisplay = document.querySelector('#cardTileView');
 const singleRecipeDisplay = document.querySelector('#singleRecipeView');
 const savedRecipesDisplay = document.querySelector('#savedRecipesView');
-const costFilterDisplay = document.querySelector('#costFilteredView')
+const costFilterDisplay = document.querySelector('#costFilteredView');
 const creatorDisplay = document.querySelector('#creatorInfoPage');
 const mainBucket = document.querySelector('main');
 const welcomeHeader = document.querySelector('#welcomeHeader');
@@ -28,7 +28,6 @@ const searchBarInput = document.querySelector('#searchBar');
 const searchResultsDisplay = document.querySelector('#searchResultsView');
 
 // Variables
-let savedRecipes = [];
 let userData, ingredientsData, recipesData, recipeRepo, recipeCostObj, thisUser;
 
 // Promise
@@ -38,41 +37,22 @@ Promise.all([fetchData('users'), fetchData('ingredients'), fetchData('recipes')]
     ingredientsData = vals[1].ingredients;
     recipesData = vals[2].recipes;
     recipeRepo = new RecipeRepository(recipesData, ingredientsData);
-    thisUser = userData[0];
+    insertRecipeCards(recipesData, cardTileDisplay);
+    thisUser = new User(userData[0]);
+    thisUser.recipesToCook = thisUser.recipesToCook.map(recipeID => recipeRepo.findRecipe(recipeID));
+    userName.innerHTML = `${thisUser.name}`;
     recipeCostObj = recipeRepo.sortRecipesByCost();
-    insertRecipeCards(recipesData, cardTileDisplay)
 });
-
-.then(vals => {
-  let userData = vals[0].users;
-  let ingredientsData = vals[1].ingredients;
-  let recipesData = vals[2].recipes;
-  let recipeRepo = new RecipeRepository(recipesData, ingredientsData);
-  insertRecipeCards(recipesData, cardTileDisplay);
-  thisUser = new User(userData[0]);
-  thisUser.recipesToCook = thisUser.recipesToCook.map(recipeID => recipeRepo.findRecipe(recipeID));
-  console.log(thisUser);
-  userName.innerHTML = `${thisUser.name}`;
-  const recipeCostObj = recipeRepo.sortRecipesByCost();
 
 // Event Listeners
 mainBucket.addEventListener('click', (event) => {
   if(event.target.classList == 'open-single-recipe') {
     showSingleRecipe(event, recipeRepo, ingredientsData);
-  };
+  }
   if (event.target.classList == 'save-recipe-btn') {
     saveRecipe(event, recipesData, thisUser);
-      // console.log(thisUser.recipesToCook);
-      // POST function goes here I think? - SM
-      console.log('User Recipes:', thisUser.recipesToCook, 'Event ID:', event.target.id)
-      let objectToPost = 
-      {
-          'userID':thisUser.id,
-          'recipeID': event.target.id
-      }
+      let objectToPost = {'userID':thisUser.id,'recipeID': event.target.id}
       postSavedRecipes(objectToPost);
-    const objectToPost = {'userID': thisUser.id, 'recipeID': event.target.id};
-    postSavedRecipes(objectToPost);
   }
 });
 
@@ -94,7 +74,6 @@ priceSelect.addEventListener('click', () => {
 });
 
 homeViewBtn.addEventListener('click', showHomeView);
-searchBarInput.addEventListener('change', getRecipeBySearch);
 searchBarBtn.addEventListener('click', getRecipeBySearch);
 savedViewBtn.addEventListener('click', showSavedRecipes);
 infoBtn.addEventListener('click', showCreatorInfo);
@@ -103,16 +82,17 @@ infoBtn.addEventListener('click', showCreatorInfo);
 function saveRecipe(event, array, user) {
   let saveEvent = event.target.id.split('save')[1];
   let matchedById = array.find((recipe) => recipe.id == saveEvent);
+  console.log(matchedById)
   let checkForDupes = user.recipesToCook.map(rec => rec.id);
   if (!checkForDupes.includes(matchedById.id)) {
     user.addRecipeToCook(matchedById, array);
-  };
-};
+  }
+}
 
 function deleteRecipe(event, array) {
   const recipeObj = event.target.parentNode.split('delete')[1];
   array.splice(recipeObj, 1)
-};
+}
 
 
 function getRecipeBySearch() {
@@ -127,9 +107,11 @@ function getRecipeBySearch() {
     filterResults.forEach(foundRecipe => {
       removedDupes.includes(foundRecipe) ? console.log('There can be only one') : removedDupes.push(foundRecipe)
     });
+    searchResultsDisplay.innerHTML = "";
     removedDupes.forEach(result => {
-      searchResultsDisplay.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`
+      searchResultsDisplay.innerHTML += `<section class="nameResults"><h1 class="searched-recipe" id=${result.id}></h1></section>`;
     });
+    
     insertRecipeCards(removedDupes, searchResultsDisplay);
   })
 }
@@ -153,8 +135,9 @@ function showSingleRecipe(event, repo, ingredients) {
   show([singleRecipeDisplay, homeViewBtn, savedViewBtn]);
   hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, welcomeHeader, costFilterDisplay]);
   let fetchedIng = ingredients;
-  const element = event.target.id.split('singleRecipe')[1];
-  const foundRecipe = repo.findRecipe(element);
+  let element = event.target.id.split('singleRecipe')[1];
+  console.log(element)
+  let foundRecipe = repo.findRecipe(element);
   foundRecipe.todosIngredients = fetchedIng;
   let foundIngredients = foundRecipe.retrieveIngredientInfo();
   let foundInstructions = foundRecipe.giveInstructionsForRecipe();
@@ -178,20 +161,21 @@ function showSingleRecipe(event, repo, ingredients) {
     <h3>Instructions</h3>
   </div>
   </section>`
-  const i = document.querySelector('.ingredients')
-  const instruc = document.querySelector('.instructions')
+  let i = document.querySelector('.ingredients')
+  let instruc = document.querySelector('.instructions')
   foundIngredients.reduce((acc, cur) => {
     acc.push(`${cur.quantity.amount} ${cur.quantity.unit} of ${cur.name}`);
     return acc;
   }, []).map(ing => i.innerHTML += `<p>${ing}</p>`);
-  foundInstructions.map(potat => instruc.innerHTML += `<p>${potat}</p>`);
+  console.log(foundInstructions)
+  foundInstructions.map(ins => instruc.innerHTML += `<p>${ins}</p>`);
 }
 
 
 // Functions
 function selectedPriceDisplay(array) {
   costFilterDisplay.innerHTML = "";
-  show([costFilterDisplay, homeViewBtn]);
+  show([costFilterDisplay, homeViewBtn, infoBtn]);
   hide([cardTileDisplay, creatorDisplay, savedRecipesDisplay, singleRecipeDisplay]);
   insertRecipeCards(array, costFilterDisplay);
 }
@@ -199,7 +183,7 @@ function selectedPriceDisplay(array) {
 function showHomeView() {
   show([cardTileDisplay, savedViewBtn, welcomeHeader, infoBtn]);
   hide([singleRecipeDisplay, homeViewBtn, creatorDisplay, savedRecipesDisplay, costFilterDisplay]);
-  insertRecipeCards(recipesData, cardTileDisplay)
+  insertRecipeCards(recipesData, cardTileDisplay);
 }
 
 function showSavedRecipes() {
@@ -211,7 +195,7 @@ function showSavedRecipes() {
 
 function showCreatorInfo() {
   show([creatorDisplay, homeViewBtn, savedViewBtn]);
-  hide([cardTileDisplay, welcomeHeader, singleRecipeDisplay, savedRecipesDisplay, infoBtn]);
+  hide([cardTileDisplay, welcomeHeader, singleRecipeDisplay, savedRecipesDisplay, infoBtn, costFilterDisplay]);
 }
 
 function show(array){
@@ -224,17 +208,14 @@ function hide(array) {
   return hideElements;
 };
 
-// This doesn't belong here but I want to see if it works and I can't quite figure out how to export two functions from apiCalls.js
-
-const postSavedRecipes = (recipesObject) => {
+// Post 
+function postSavedRecipes(recipesObject) {
   recipesObject.recipeID = recipesObject.recipeID.split('save')[1];
   console.log(recipesObject);
   fetch('http://localhost:3001/api/v1/usersRecipes', {
     method: 'POST',
     body: JSON.stringify(recipesObject),
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    headers: {'Content-Type': 'application/json'}
   })
   .then(response => {
     if (!response.ok) {
@@ -244,5 +225,5 @@ const postSavedRecipes = (recipesObject) => {
     return response.json()
   })
   .then(json => console.log(json))
-  .catch(error => console.log('Caught error:', error))
+  .catch(error => console.log('Caught error:', error));
 }
