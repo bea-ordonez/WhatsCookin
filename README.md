@@ -22,7 +22,7 @@ Run 'npm test' from the terminal while within the main directory of the applicat
 
 ## Preview of App:
 [//]: <>
-![WhatsCookinAppPreview](https://user-images.githubusercontent.com/117314181/218613699-a993f009-7a9e-433b-8dba-76b8f2aa0f11.png)
+<img width="1440" alt="Screenshot 2023-02-28 at 8 37 49 AM" src="https://user-images.githubusercontent.com/117242156/221904138-a8d3c5f7-8b8a-409c-a70a-c2b5f2a61a9d.png">
 
 If you encounter errors when trying to host the site with webpack: Remember to use ‘npm install’ before trying to host the server on your local machine!
 
